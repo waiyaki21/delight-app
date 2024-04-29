@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '/resources/css/assets/flowbite.css';
+@import '/resources/css/assets/grid.css';
+/* @import '/resources/css/assets/perfect-scrollbar.css'; */
+@import '/resources/css/app.css';
+@import '/resources/css/screen.css';
+@import '/resources/css/assets/slider.css';
+@import '/resources/js/Components/BodyComponents/css/swipe.css';
