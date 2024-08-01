@@ -13,28 +13,28 @@
                 <ul class="flex flex-wrap list-none md:justify-end justify-center">
                     <li>
                         <a href="" class="text-blueGray-600 dark:text-white hover:text-blueGray-800 text-sm font-normal block py-1 px-3">
-                            Kelvin Waiyaki Wanjohi
+                            {{ appname }}.
                         </a>
                     </li>
                     <li>
                         <a href="" class="text-blueGray-600 dark:text-white hover:text-blueGray-800 text-sm font-normal block py-1 px-1">
-                            +254794967315
+                            {{ contact1 }}
                         </a>
                     </li>
                     <li>
-                        <a href="tel:+254794967315" data-tooltip-target="call-footer-tooltip" class="text-blueGray-600 dark:text-white hover:text-blueGray-800 text-sm font-normal block py-1 px-1" style="margin-top: -9px;">
+                        <a :href="'tel:+'+contact1" data-tooltip-target="call-footer-tooltip" class="text-blueGray-600 dark:text-white hover:text-blueGray-800 text-sm font-normal block py-1 px-1" style="margin-top: -9px;">
                             <i class="text-blueGray-600 dark:text-white fas fa-phone-alt text-sm my-2 mx-1"></i>
                             <div id="call-footer-tooltip" role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
-                            Call, Waiyaki for your own state of the art system of your own preference.
+                            Call, Delight Electronics.
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a href="whatsapp://send?text=Hello Waiyaki&phone=+254794967315" data-tooltip-target="whatsapp-footer-tooltip" class="text-blueGray-600 dark:text-white hover:text-blueGray-800 text-sm font-normal block py-1 px-1" style="margin-top: -9px;">
+                        <a :href="'whatsapp://send?text=Hello Delight Electronics&phone=+'+ contact1" data-tooltip-target="whatsapp-footer-tooltip" class="text-blueGray-600 dark:text-white hover:text-blueGray-800 text-sm font-normal block py-1 px-1" style="margin-top: -9px;">
                             <i class="text-blueGray-600 dark:text-white fas fa-sms text-sm my-2 mx-1"></i>
                             <div id="whatsapp-footer-tooltip" role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700">
-                            Click to Whatsapp, Waiyaki for your own state of the art system of your own preference. 
+                            Whatsapp, Delight Electronics. 
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
                         </a>
@@ -49,6 +49,13 @@
 <script>
     import moment from 'moment';
     export default {
+
+        data() {
+            return {
+                appname:  process.env.MIX_APP_NAME,
+                contact1: process.env.MIX_CONTACT1,
+            }
+        },
 
         created() {
         },

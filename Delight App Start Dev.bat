@@ -43,7 +43,7 @@ if not DEFINED IS_MINIMIZED set IS_MINIMIZED=1 && start "" /min "%~dpnx0" %* && 
 TITLE DELIGHT APP BOOT UP
 START /min C:\xampp\xampp_start.EXE
 timeout /t 20 /nobreak
-START /min C:\Program Files\VSCode\Code.EXE
+@REM START /min C:\Program Files\VSCode\Code.EXE
 timeout /t 20 /nobreak
 START http://localhost:8000/
 exit

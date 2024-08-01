@@ -2,12 +2,12 @@ const mix = require('laravel-mix');
 
 // main 
 mix
-    .js('resources/js/app.js', 'public/js/app.js')
+    .js('resources/js/app.js', 'public/js/app8.js')
     .vue()
     .extract(['moment','swiper','vue-router','@heroicons/vue/24/outline','@tiptap','vue-simple-range-slider'])
     .version()
 
-// search 
+// search   
 // mix
 //     .js('resources/js/search.js', 'public/js/search')
 //     .vue()

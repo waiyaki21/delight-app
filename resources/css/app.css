@@ -394,3 +394,7 @@ select.option-font>option {
 th {
   font-weight: 400;
 }
+
+footer {
+  display: none;
+}
