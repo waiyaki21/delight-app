@@ -32,7 +32,8 @@ import footerBody       from './Components/BodyComponents/FooterBody.vue'
 import flashMessage     from './Components/AlertComponents/flash-simple.vue'
 
 // import icons 
-import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon }   from '@heroicons/vue/24/outline';
+import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon }   from '@heroicons/vue/24/outline';
+
 
 // import utilities from './Components/FormComponents/utilities';
 
@@ -80,6 +81,7 @@ app
         .component('home-icon',         HomeModernIcon)
         .component('copy-icon',         DocumentDuplicateIcon)
         .component('user-icon',         UserCircleIcon)
+        .component('favorite-icon',     HeartIcon)
         // end icon components 
 
         .use(router)

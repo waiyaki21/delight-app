@@ -52,5 +52,10 @@ class User extends Authenticatable
     public function shippingNotifications()
     {
         return $this->hasMany('App\Models\Notification', 'notifiable_id')->where('type', 'App\\Notifications\\ShippingOrder')->where('read_at', null);
-    } 
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

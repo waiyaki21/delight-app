@@ -1,10 +1,18 @@
 const mix = require('laravel-mix');
+// const webpack = require('webpack')
 
 // main 
 mix
     .js('resources/js/app.js', 'public/js/app8.js')
     .vue()
-    .extract(['moment','swiper','vue-router','@heroicons/vue/24/outline','@tiptap','vue-simple-range-slider'])
+    .extract([
+        'moment',
+        'swiper',
+        'vue-router',
+        '@heroicons/vue/24/outline',
+        '@tiptap',
+        'vue-simple-range-slider'
+    ])
     .version()
 
 // search   
@@ -14,9 +22,9 @@ mix
 //     .extract(['vue-router','@heroicons/vue/24/outline','vue-simple-range-slider'])
 //     .version()
 
-    // .postCss('resources/css/main.css', 'public/css/main.css', [
-    //     require('tailwindcss'), require('autoprefixer')
-    // ])
+    .postCss('resources/css/main.css', 'public/css/main.css', [
+        require('tailwindcss'), require('autoprefixer')
+    ])
 
     // .alias({
     //     '@': 'resources/js',
@@ -34,3 +42,5 @@ mix
 if (mix.inProduction()) {
     mix.version();
 }
+
+mix.browserSync('127.0.0.1:8000');

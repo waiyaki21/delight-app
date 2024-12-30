@@ -1,5 +1,7 @@
 <template>
-    <nav class="fixed w-full bg-white border-b-2 border-black px-2 sm:px-4 pt-2 dark:bg-gray-900 shadow z-40">
+    <nav 
+        class="fixed w-full bg-white border-b-2 border-black px-2 sm:px-4 pt-2 dark:bg-gray-900 shadow z-40"
+        :style="{ opacity: navbarOpacity, transtion: 'opacity 0.1s ease' }">
         <!-- flash -->
         <flash 
             ref="childComponentRef"
@@ -7,7 +9,7 @@
         <div class="flex flex-wrap items-center justify-between mx-auto">
             <!-- Main Logo  -->
             <a href="/" class="flex items-center">
-                <img src="/img/logos/delight-electronics-logo-bny.png" class="mr-2 mb-2 logo xs-max:h-7 xs-max:w-7" alt="Delight Electronics Logo" />
+                <img src="/img/logos/delight-electronics-logo-bny.png" class="mr-2 mb-2 logo xs-max:h-6 xs-max:w-6" alt="Delight Electronics Logo" />
                 <span class="self-center logotext uppercase underline font-semibold whitespace-nowrap text-black xs-max:text-3xl"> 
                     {{ appname }}. 
                 </span>
@@ -319,18 +321,43 @@
                 // dropdown classess
                 userClass: 'z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 border border-black inset-menu',
                 notificationClass: 'z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 border border-black inset-menu',
+
+                lastScrollPosition: 0,
+                isScrollingDown: false,
+                navbarOpacity: 1,
             }
         },
 
         mounted() {
             this.getCatergoriesLoad();
+            window.addEventListener("scroll", this.handleScroll);
         },
 
         beforeMount() {
             this.getUser();
         },
 
+        beforeUnmount() {
+            window.removeEventListener("scroll", this.handleScroll);
+        },
+
         methods: {
+            handleScroll() {
+                const currentScrollPosition = window.scrollY;
+
+                if (currentScrollPosition > this.lastScrollPosition) {
+                    // Scrolling Down
+                    this.isScrollingDown = true;
+                    this.navbarOpacity = Math.max(0, this.navbarOpacity - 0.1); // Gradual fade out
+                } else {
+                    // Scrolling Up
+                    this.isScrollingDown = false;
+                    this.navbarOpacity = Math.min(1, this.navbarOpacity + 0.1); // Gradual fade in
+                }
+
+                this.lastScrollPosition = currentScrollPosition;
+            },
+            
             getUser() {
                 axios.get('/getUser/')
                     .then(

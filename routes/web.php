@@ -16,6 +16,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\CatergoryController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProductImageController;
@@ -242,6 +243,12 @@ Route::controller(ImageUploadController::class)->group(function () {
     Route::get('/resizeImage', 'resizeImage');
 
     Route::post('/resizeImagePost', 'resizeImagePost')->name('resizeImagePost');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/favorites', [FavoriteController::class, 'store']);
+    Route::delete('/favorites/{id}', [FavoriteController::class, 'destroy']);
 });
 
 require __DIR__.'/auth.php';

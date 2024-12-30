@@ -34,6 +34,6 @@
 
 @echo off
 TITLE Launch System
-powershell.exe ". 'C:\Users\kelvi\Desktop\Work Projects\DELIGHT ELECTRONICS\OG APP\delight-app\delight-launcher.ps1' "
+powershell.exe ". 'C:\Users\Kelvin Waiyaki\Desktop\Work Projects\Delight Electronics Info\delight-app\delight-launcher.ps1' "
 
 TIMEOUT /T 5

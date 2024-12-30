@@ -1,4 +1,5 @@
 <link href="{{ asset('/img/logos/Delight Electronics-logos_transparent.png') }}" rel="shortcut icon" />
+<link rel="icon" href="/favicon.ico" />
 {{-- <link href='https://fonts.googleapis.com/css?family=Sofia Sans Extra Condensed' rel='stylesheet'> --}}
 <link href="{{ asset('/css/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet" >
 <link href="{{ asset('/css/main.css') }}" rel="stylesheet" >

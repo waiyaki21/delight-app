@@ -28,7 +28,12 @@
         "tailwindcss": "^3.2.4",
         "vue": "^3.2.45",
         "vue-loader": "^17.0.0",
-        "vue-router": "4.0.5"
+        "vue-router": "4.0.5",
+        // uninstalled 
+        "lodash": "^4.17.19",
+        "node-sass": "^8.0.0",
+        "gulp": "4.0.2",
+        "gulp-append-prepend": "1.0.8",
     },
     "dependencies": {
         "@chenfengyuan/vue-countdown": "^2.1.0",
