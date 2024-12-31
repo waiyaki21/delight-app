@@ -7,6 +7,7 @@ use App\Models\Catergory;
 use App\Models\ProductImage;
 use App\Models\ProductFeature;
 use App\Models\ProductThumbnail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -29,6 +30,10 @@ class Product extends Model
         'thumbnail_name',
         'thumbnail_path',
     ];
+
+    // protected $appends = [
+    //     // 'is_favorited',
+    // ];
 
     public function admin() {
         return $this->belongsTo('/App/Models/Admin', 'admin_id');
@@ -64,5 +69,21 @@ class Product extends Model
 
     public function soldunits() {
         return $this->hasMany(ShippedProduct::class, 'product_id')->where('delivered', 1);
+    }
+
+    public function favorites() {
+        return $this->hasMany(Favorite::class, 'product_id');
+    }
+
+    public function getIsFavoritedAttribute()
+    {
+        $user = auth()->user();  // Check if a user is authenticated
+
+        if (!$user) {
+            return false;  // If no user is logged in, return false
+        }
+
+        // If a user is logged in, check if the product is favorited by them
+        return $this->favorites()->where('user_id', $user->id)->exists();
     }
 }

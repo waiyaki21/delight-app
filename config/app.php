@@ -205,7 +205,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         // downloaded packages
-        Gathuku\Mpesa\MpesaServiceProvider::class,
+        // Gathuku\Mpesa\MpesaServiceProvider::class,
 
     ],
 
@@ -264,7 +264,7 @@ return [
 
         // downloaded packages
         'Image' => Intervention\Image\Facades\Image::class,
-        'Mpesa' => Gathuku\Mpesa\Facades\Mpesa::class,
+        // 'Mpesa' => Gathuku\Mpesa\Facades\Mpesa::class,
 
     ],
 

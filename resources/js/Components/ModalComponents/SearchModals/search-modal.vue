@@ -129,9 +129,11 @@
 			},
 
             enterClicked(search) {
-                // console.log(search);
-                // window.location = `http://localhost:8000/search/`+search;
-                window.location = `https://www.delightelectronics.co.ke/search/` + search;
+                const baseUrl = process.env.NODE_ENV === 'development'
+                    ? 'http://localhost:8000/search/'
+                    : 'https://www.delightelectronics.co.ke/search/';
+                
+                window.location = baseUrl + search;
             },
 
             searchTest() {

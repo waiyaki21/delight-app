@@ -34,8 +34,7 @@ import flashMessage     from './Components/AlertComponents/flash-simple.vue'
 // import icons 
 import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon }   from '@heroicons/vue/24/outline';
 
-
-// import utilities from './Components/FormComponents/utilities';
+import favoriteSolid from './Utilities/Icons/favoriteSolid-icon.vue';
 
 const app = createApp({})
 app
@@ -82,6 +81,7 @@ app
         .component('copy-icon',         DocumentDuplicateIcon)
         .component('user-icon',         UserCircleIcon)
         .component('favorite-icon',     HeartIcon)
+        .component('favSolid-icon',     favoriteSolid)
         // end icon components 
 
         .use(router)

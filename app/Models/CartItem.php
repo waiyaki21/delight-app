@@ -27,6 +27,11 @@ class CartItem extends Model
         'bought',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'buyer_id');
+    }
+
     public function product() {
         return $this->belongsTo('App\Models\Product', 'product_id');
     }

@@ -14,17 +14,11 @@ class Favorite extends Model
         'product_id',
     ];
 
-    /**
-     * Get the user that owns the favorite.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the product that is favorited.
-     */
     public function product()
     {
         return $this->belongsTo(Product::class);

@@ -350,10 +350,9 @@ class ProductController extends Controller
     {
         $products   =   Product::where([
                                     ['sold_out', '0'],
-                                    // ['catergory_id' ,'!=', '9']
                                 ])
                                 ->orderBy('created_at', 'desc')
-                                ->with('brand','catergory')
+                                ->with('brand','catergory','favorites')
                                 ->take(16)
                                 ->get();
 

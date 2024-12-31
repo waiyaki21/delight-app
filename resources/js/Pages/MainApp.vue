@@ -1,6 +1,10 @@
 <template>
     <div id="root">
         <div class="relative bg-white dark:bg-gray-900 max-h-full">
+            <!-- flash -->
+            <flash 
+                ref="childComponentRef"
+            ></flash>
             <!-- navigation menus -->
             <main-nav
                 v-bind:appname        = "appname"
@@ -8,6 +12,7 @@
                 v-bind:contact1       = "contact1"
                 v-bind:catfiles       = "catfiles"
                 ref                   = "mainNavRef"
+                @flash                = "flash"
                 @reloadproduct        = "getProducts"
                 @userinfo             = "setUser"
             ></main-nav>
@@ -23,6 +28,7 @@
                     v-bind:user         = "user"
                     v-bind:logged       = "logged"
                     v-bind:admin        = "admin"
+                    @flash              = "showFlash"
                     @cartinfo           = "updateCart"
                     @reloaduser         = "reloaduser"
                     @loaded             = "loaded"  
@@ -54,6 +60,7 @@
 </template>
 
 <script>
+    import flash 			        from '../Components/AlertComponents/flash-simple.vue';
     export default {
         props: [
             'catfiles',
@@ -77,6 +84,10 @@
                 // load 
                 componentKey: 0,
             }
+        },
+
+        components : {
+            flash,
         },
 
         beforeMount() {
@@ -150,7 +161,15 @@
 
             deleteCatergory(catergory) {
                 this.$refs.mainNavRef.deleteCatergory(catergory);
-            }
+            },
+
+            showFlash(message) {
+                this.$refs.childComponentRef.flash([message, 'bg-green-100']);
+            },
+
+            flash(message, color) {
+                this.$refs.childComponentRef.flash([message, color]);
+            },
         }
     }
 </script>

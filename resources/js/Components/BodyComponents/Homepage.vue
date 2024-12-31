@@ -15,7 +15,7 @@
                 <hr class="width-hr mx-auto mb-4 border-b-2 border-blueGray-200" />
 
                 <!-- catergory images    -->
-                <carousel v-if="this.catergories.length > 0" v-bind:banners="this.banners" v-bind:admin="this.admin"
+                <carousel v-if="this.catergories.length > 0" :banners="this.banners" :admin="this.admin"
                     @edit="editCatergory" @banner="editBanner" @delete="deleteCatergory"></carousel>
                 <!-- end catergory images    -->
             </section>
@@ -32,7 +32,7 @@
                     </div>
                     <!-- latest arrivals cards  -->
                     <cardSlider :latestKey="latestKey" :items="this.products" :cards="this.mySwiperCards"
-                        :class="this.mySwiperClass">
+                        :class="this.mySwiperClass" :user = "this.user" :logged = "this.logged" :admin = "this.admin" @reload="mainReload">
                     </cardSlider>
 
                 </div>
@@ -41,7 +41,7 @@
                 <hr class="width-hr mx-auto mb-2 border-b-2 border-blueGray-200" />
 
                 <!-- catergory images    -->
-                <carousel v-bind:banners="this.banners" v-bind:admin="this.admin" @edit="editCatergory"
+                <carousel :banners="this.banners" :admin="this.admin" @edit="editCatergory"
                     @banner="editBanner" @delete="deleteCatergory"></carousel>
                 <!-- end catergory images    -->
 
@@ -61,8 +61,7 @@
                                 all.</a>
                         </div>
                         <!-- catergory products slider -->
-                        <categoriesSlider :catergory="catergory" :latestKey="latestKey"
-                            :mySwiperCards="this.mySwiperCards" :mySwiperClass="this.mySwiperClass" />
+                        <categoriesSlider :catergory="catergory" :products="updatedProducts(catergory.in_stock_products)" :latestKey="latestKey" :mySwiperCards="this.mySwiperCards" :mySwiperClass="this.mySwiperClass" :user = "this.user" :logged = "this.logged" :admin = "this.admin" @reload="mainReload"/>
                         <hr class="width-hr mx-auto mb-2 border-b-2 border-blueGray-200" />
                     </div>
                 </div>
@@ -75,7 +74,7 @@
                     </div>
                     <!-- Carousel wrapper -->
                     <cardSlider :latestKey="latestKey" :items="this.stuff" :cards="this.mySwiperCards"
-                        :class="this.mySwiperClass">
+                        :class="this.mySwiperClass" :user = "this.user" :logged = "this.logged" :admin = "this.admin" @reload="mainReload">
                     </cardSlider>
                 </div>
                 <!--end random  -->
@@ -183,6 +182,24 @@
         },
 
         methods: {
+            // Add is_favorited to each product
+            updatedProducts(infos) {
+                if (!this.user) {
+                    return infos; // If user is not available, return items without modification
+                }
+                console.log(this.user.id);
+                return infos.map(product => {
+                    // Ensure user.id and favorite.user_id are both strings (or both numbers)
+                    const isFavorited = Array.isArray(product.favorites) && 
+                        product.favorites.some(favorite => String(favorite.user_id) === String(this.user.id));
+
+                    return {
+                        ...product,
+                        is_favorited: isFavorited
+                    };
+                });
+            },
+
             getWindowWidth(event) {
                 this.windowWidth = document.documentElement.clientWidth;
                 const x = this.windowWidth;
@@ -219,9 +236,8 @@
                 axios.get('/api/getProducts/')
                     .then(
                     	({data}) => {
-                    		this.products       = data[0];
-                            this.stuff          = data[1];
-                            // this.loaded();
+                    		this.products       = this.updatedProducts(data[0]);
+                            this.stuff          = this.updatedProducts(data[1]);
                     });
             },
 
@@ -247,10 +263,11 @@
                     console.log('reloaded');
             },
 
-            mainReload() {
-                this.isloading = true;
+            mainReload(message) {
+                // this.isloading = true;
                 this.getProducts();
                 this.getCatergories();
+                this.$emit('flash', message);
             },
 
             editCatergory(catergory) {

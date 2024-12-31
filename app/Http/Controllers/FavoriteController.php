@@ -22,34 +22,29 @@ class FavoriteController extends Controller
     }
 
     // Add a product to the user's favorites
-    public function store(Request $request)
+    public function store($id)
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-        ]);
-
-        $user = Auth::user();
-        $product = Product::find($request->product_id);
+        $user       = Auth::user();
+        $product    = Product::find($id);
 
         // Check if already favorited
         if ($user->favorites()->where('product_id', $product->id)->exists()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product is already in favorites.',
-            ], 400);
+            // if favorited remove it 
+            $favorite = $user->favorites()->where('product_id', $product->id)->first();
+            $this->destroy($favorite->id);
+            $message = $product->name . ' :Removed from Wishlist.';
+        } else {
+            // Add to favorites
+            $favorite = new Favorite();
+            $favorite->user_id = $user->id;
+            $favorite->product_id = $product->id;
+            $favorite->save();
+
+            $message = $product->name. ' :Added to wishlist.';
         }
 
-        // Add to favorites
-        $favorite = new Favorite();
-        $favorite->user_id = $user->id;
-        $favorite->product_id = $product->id;
-        $favorite->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Product added to favorites.',
-            'favorite' => $favorite,
-        ]);
+        $favorites = Favorite::where('user_id', $user->id)->get();
+        return [$message, $favorites];
     }
 
     // Remove a product from the user's favorites

@@ -24,16 +24,20 @@ class HomeController extends Controller
     public function getUser()
     {
         if (Auth::check()) {
-            $user = Auth::user();
-            $logged = true;
-            $admin = Auth::user()->admin;
+            $user       = Auth::user();
+            $favorites  = $user->favorites()->count();
+            $items      = $user->cartItems()->count();
+            $logged     = true;
+            $admin      = Auth::user()->admin;
         } else {
-            $user = null;
-            $logged = false;
-            $admin = 0;
+            $user       = null;
+            $favorites  = 0;
+            $items      = 0;
+            $logged     = false;
+            $admin      = 0;
         }
 
-        return [$user, $logged, $admin];  
+        return [$user, $logged, $admin, $favorites, $items];  
     }
 
     public function getUserDelivery()

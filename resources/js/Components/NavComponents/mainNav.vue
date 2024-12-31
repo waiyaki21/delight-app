@@ -2,10 +2,6 @@
     <nav 
         class="fixed w-full bg-white border-b-2 border-black px-2 sm:px-4 pt-2 dark:bg-gray-900 shadow z-40"
         :style="{ opacity: navbarOpacity, transtion: 'opacity 0.1s ease' }">
-        <!-- flash -->
-        <flash 
-            ref="childComponentRef"
-        ></flash>
         <div class="flex flex-wrap items-center justify-between mx-auto">
             <!-- Main Logo  -->
             <a href="/" class="flex items-center">
@@ -33,8 +29,18 @@
                 </a>
                 <!-- end shopping cart -->
 
+                <!-- favorites items -->
+                <router-link :to="'/favorites/'+user.id" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1" v-if="logged">
+                    <favorite-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></favorite-icon>
+                    <div class="inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-sm text-black bg-gray-200 rounded-full border-2 border-black dark:border-gray-900">
+                        {{ this.favorites }}
+                    </div>
+                </router-link>
+                <div class="divider px-1 text-black xs-hidden"></div>
+                <!-- end favorites items-->
+
                 <!-- cart items -->
-                <router-link :to="'/checkout/'+user.id" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1" v-else>
+                <router-link :to="'/checkout/'+user.id" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1" v-if="logged">
                     <shopping-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></shopping-icon>
                     <div class="inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-sm text-black bg-gray-200 rounded-full border-2 border-black dark:border-gray-900">
                         {{ this.cartItems }}
@@ -258,7 +264,6 @@
 </template>  
 
 <script>
-    import flash 			        from '../AlertComponents/flash-simple.vue';
     import catergoryModal           from '../modalComponents/CatergoryModals/catergory-modal.vue';
     import catergoryEditModal       from '../modalComponents/CatergoryModals/catergory-edit-modal.vue';
     import brandEditModal           from '../modalComponents/BrandModals/brand-edit-modal.vue';
@@ -282,7 +287,6 @@
             catergoryModal,
             catergoryEditModal,
             brandEditModal,
-            flash,
             productModal,
             searchModal,
             catMobile,
@@ -301,6 +305,7 @@
                 flashMessage : "",
                 modalData: {},
                 cartItems: '',
+                favorites: '',
                 fields: {},
 
                 //show form
@@ -345,7 +350,10 @@
             handleScroll() {
                 const currentScrollPosition = window.scrollY;
 
-                if (currentScrollPosition > this.lastScrollPosition) {
+                if (currentScrollPosition === 0) {
+                    // At the top of the page, set opacity to 1
+                    this.navbarOpacity = 1;
+                } else if (currentScrollPosition > this.lastScrollPosition) {
                     // Scrolling Down
                     this.isScrollingDown = true;
                     this.navbarOpacity = Math.max(0, this.navbarOpacity - 0.1); // Gradual fade out
@@ -363,16 +371,20 @@
                     .then(
                     	({data}) => {
                             this.logged = data[1]
-                            if (this.logged == true) {
+                            if (this.logged) {
                                 this.user   = data[0]
                                 this.admin  = data[2]
-                                this.getCartItems(data[0]);
+                                this.favorites  = data[3];
+                                this.cartItems  = data[4];
+                                this.getNotifications();
                             } else {
                                 this.user = [
                                     {'name' :'none','admin':'0'}
                                 ];
                                 this.admin = 0;
-                                this.cartItems = '0';
+                                this.favorites = 0;
+                                this.cartItems = 0;
+                                this.notifications = 0;
                             }
                             this.$emit('userinfo', [this.logged, this.user, this.admin]);
                     });
@@ -414,22 +426,16 @@
 
 			getNotifications() {
                 axios.get('/api/allnotifications')
-                    .then(({data}) => this.notifications = data);
-                setTimeout(this.getNotifications2, 600000);   
-			},
-
-			getNotifications2() {
-                axios.get('/api/allnotifications')
-                    .then(({data}) => this.notifications = data);
-                setTimeout(this.getNotifications, 600000);   
-			},
+                    .then(({data}) => this.notifications = data)
+                    .finally(() => setTimeout(this.getNotifications, 600000)); // Recursively call the same function after 10 minutes
+            },
 
 			clearNotifications() {
 				let not_no = this.notifications.length;
 				axios.get('/notifications/'+this.user.id);
                 this.getNotifications();
                 this.flashMessage = 'All ' + not_no +' Notifications cleared!';
-                this.$refs.childComponentRef.flash([this.flashMessage, 'bg-green-100']); 
+                this.$emit('flash', [this.flashMessage, 'bg-green-100']); 
 			},
 
             getCatergoriesLoad() {
@@ -446,7 +452,7 @@
 
             update(message) {
                 this.flashMessage = message;
-                this.$refs.childComponentRef.flash([this.flashMessage, 'bg-green-100']);
+                this.$emit('flash', [this.flashMessage, 'bg-green-100']);
                 this.reload();
                 // this.getCatergories();
             },
@@ -521,7 +527,7 @@
 	                axios.delete('/catergory/delete/'+catergory.id)
 	                    .then(response => {
 	                    	this.flashMessage = 'The catergory: ' + name + ' has been deleted!';
-	                    	this.$refs.childComponentRef.flash([this.flashMessage, 'bg-red-100']);
+	                    	this.$emit('flash', [this.flashMessage, 'bg-red-100']);
                             this.getCatergories();
 	                 	});
 			   }
@@ -533,16 +539,11 @@
                     axios.delete('/brand/delete/' + brand.id)
                         .then(response => {
                             this.flashMessage = 'The brand: ' + name + ' has been deleted!';
-                            this.$refs.childComponentRef.flash([this.flashMessage, 'bg-red-100']);
+                            this.$emit('flash', [this.flashMessage, 'bg-red-100']);
                             this.getCatergories();
                         });
                 }
-            },
-
-            flash(message) {
-                this.flashMessage = message;
-                this.$refs.childComponentRef.flash([this.flashMessage, 'bg-green-100']);
-            },
+            }
         }
     }
 </script>

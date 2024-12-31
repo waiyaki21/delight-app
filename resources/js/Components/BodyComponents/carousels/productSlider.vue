@@ -13,36 +13,34 @@
                 <img :class="['my-1 rounded-lg border group-hover:border-gray-500 group-hover:shadow-md']"
                     :src="product.thumbnail_path" :alt="`${product.name} image for sale on Delight Electronics`"
                     v-else />
-                <div class="px-2 pb-4 text-center">
-                    <a :href="'/product_show/' + product.id">
-                        <h5
-                            class="text-xl md:text-2xl font-medium text-gray-900 group-hover:text-cyan-900 dark:text-white underline uppercase w-full justify-center overflow-x-scroll overflow-ellipsis whitespace-nowrap no-scrollbar">
-                            {{ product.name }}
+                <div class="px-2 pb-4 text-left">
+                    <a :href="'/product_show/'+product.id">
+                        <h5 class="font-normal hover:text-gray-700 text-black dark:text-white uppercase">
+                            <span class="font-medium text-gray-900 group-hover:text-cyan-900 dark:text-white underline uppercase w-full justify-start overflow-x-scroll overflow-ellipsis whitespace-nowrap no-scrollbar hover:underline text-2xl">{{ product.name }}</span>
+                            <br>
+                            <div class="flex justify-start">
+                                <a :href="'/catergory/'+product.catergory_id" :class="[this.infoBtn]">
+                                    {{ state ? product.brand.catergory.name : product.catergory?.name }}
+                                </a>
+                                <a :href="'/brand/'+product.brand_id" :class="[this.infoBtn]">
+                                    {{ product.brand.name }}
+                                </a>
+                            </div>
                         </h5>
                     </a>
-                    <div class="flex items-center my-0.5">
-                        <div class="inline-flex w-full justify-center space-x-1 p-1 underline uppercase">
-                            <a :href="'/catergory/' + product.catergory_id"
-                                class="bg-white text-black text-xs px-1 mx-1 hover:cursor-pointer group-hover:underline">
-                                {{ state ? product.brand.catergory.name : product.catergory?.name }}
-                            </a>
-                            <a :href="'/brand/' + product.brand.id"
-                                class="bg-white text-black text-xs px-1 mx-1 hover:cursor-pointer group-hover:underline">
-                                {{ product.brand?.name }}
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex items-center my-1.5">
+                    <div class="flex items-start my-1.5">
                         <span
-                            class="inline-flex w-full justify-center text-xl md:text-2xl text-gray-900 dark:text-white group-hover:text-cyan-900">
+                            class="inline-flex w-full justify-start text-xl md:text-2xl text-gray-900 dark:text-white group-hover:text-cyan-900">
                             KSH {{ Number(product.price).toLocaleString() }}
                         </span>
                     </div>
 
                     <div class="flex items-center justify-between space-x-2">
                         <a
-                            class="text-center uppercase text-pink-900 bg-white border border-pink-300 focus:outline-none hover:bg-pink-900 hover:text-white focus:ring-1 focus:ring-pink-200 font-normal text-lg sm:text-sm p-2 mb-0.5 dark:bg-pink-800 dark:text-white dark:border-pink-600 dark:hover:bg-pink-700 dark:hover:border-pink-600 dark:focus:ring-pink-700 cursor-pointer shadow-sm hover:shadow-md rounded-full inline-flex items-center px-auto w-fit justify-center">
-                            <favorite-icon class="h-6 w-6 sm:h-4 sm:w-4"></favorite-icon>
+                            :class="['text-center uppercase cursor-pointer rounded-full inline-flex items-center px-auto w-fit justify-center focus:outline-none font-normal text-lg sm:text-sm p-2 mb-0.5 focus:ring-1 bg-transparent']" @click="handleChildClick($event, product.id)" v-if="this.logged">
+                            
+                            <favSolid-icon :class="['h-6 w-6 sm:h-4 sm:w-4 text-pink-900']" v-if="product.is_favorited"></favSolid-icon>
+                            <favorite-icon :class="['h-6 w-6 sm:h-4 sm:w-4 text-pink-900']" v-else></favorite-icon>
                         </a>
                         <a
                             class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none group-hover:bg-gray-900 group-hover:text-white focus:ring-1 focus:ring-gray-200 font-normal text-lg sm:text-sm p-2 mb-0.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:group-hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow-sm group-hover:shadow-md rounded-lg inline-flex items-center px-auto w-full justify-center">
@@ -76,10 +74,20 @@
             'state',
             'mySwiperCards',
             'mySwiperClass',
+            'user',
+            'logged',
+            'admin'
         ],
+
         components: {
             Swiper,
             SwiperSlide
+        },
+
+        data() {
+            return {
+                infoBtn: 'bg-white text-black text-sm p-1 mx-1 uppercase border border-gray-300 hover:bg-black hover:text-white rounded-md hover:shadow-md'
+            }
         },
 
         setup() {
@@ -93,5 +101,35 @@
                 ],
             };
         },
+
+        methods: {
+            handleChildClick(event, productId) {
+                console.log('pkaaaaaaaah');
+                
+                event.stopPropagation(); // Prevent bubbling to parent <a> tag
+                event.preventDefault();  // Prevent the browser's default navigation
+                this.productFavorite(productId); // Execute the desired logic
+            },
+
+            productFavorite(id) {
+                axios.get('/favorites/'+id)
+                    .then(
+                    	({data}) => {
+                            this.message    = data[0];
+                            // if (this.logged == true) {
+                            //     this.user   = data[0]
+                            //     this.admin  = data[2]
+                            //     this.getCartItems(data[0]);
+                            // } else {
+                            //     this.user = [
+                            //         {'name' :'none','admin':'0'}
+                            //     ];
+                            //     this.admin = 0;
+                            //     this.cartItems = '0';
+                            // }
+                            this.$emit('favorites', this.message);
+                    });
+            }
+        }
     };
 </script>

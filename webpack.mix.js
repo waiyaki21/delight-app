@@ -1,30 +1,34 @@
 const mix = require('laravel-mix');
 // const webpack = require('webpack')
 
-// main 
+const commonExtract = [
+    'vue-router',
+    '@heroicons/vue/24/outline',
+    'vue-simple-range-slider'
+];
+
 mix
     .js('resources/js/app.js', 'public/js/app8.js')
     .vue()
     .extract([
         'moment',
         'swiper',
-        'vue-router',
-        '@heroicons/vue/24/outline',
         '@tiptap',
-        'vue-simple-range-slider'
+        ...commonExtract
     ])
     .version()
 
-// search   
-// mix
-//     .js('resources/js/search.js', 'public/js/search')
-//     .vue()
-//     .extract(['vue-router','@heroicons/vue/24/outline','vue-simple-range-slider'])
-//     .version()
+    .js('resources/js/search.js', 'public/js/search.js')
+    .vue()
+    .extract([
+        ...commonExtract
+    ])
+    .version()
 
     .postCss('resources/css/main.css', 'public/css/main.css', [
-        require('tailwindcss'), require('autoprefixer')
-    ])
+        require('tailwindcss'),
+        require('autoprefixer')
+    ]);
 
     // .alias({
     //     '@': 'resources/js',
