@@ -104,7 +104,7 @@
 
         methods: {
             handleChildClick(event, productId) {
-                console.log('pkaaaaaaaah');
+                // console.log('pkaaaaaaaah');
                 
                 event.stopPropagation(); // Prevent bubbling to parent <a> tag
                 event.preventDefault();  // Prevent the browser's default navigation
@@ -112,23 +112,28 @@
             },
 
             productFavorite(id) {
-                axios.get('/favorites/'+id)
+                // console.log('pkaaaaaaaah2');
+                // if (this.logged) {
+                //     axios.get('/favorites/' + id)
+                //     .then(
+                //         ({ data }) => {
+                //             this.message = data[0];
+                //             this.body    = data[1];
+                //             this.$emit('flash', this.message, this.type);
+                //             // console.log('pkaaaaaaaah2', this.message);
+                //         });
+                // } else {
+                //     this.message = 'Create an account first!'
+                //     this.$emit('flash', this.message, 'danger');
+                // }
+                axios.get('/favorites/switch/' + id)
                     .then(
-                    	({data}) => {
-                            this.message    = data[0];
-                            // if (this.logged == true) {
-                            //     this.user   = data[0]
-                            //     this.admin  = data[2]
-                            //     this.getCartItems(data[0]);
-                            // } else {
-                            //     this.user = [
-                            //         {'name' :'none','admin':'0'}
-                            //     ];
-                            //     this.admin = 0;
-                            //     this.cartItems = '0';
-                            // }
-                            this.$emit('favorites', this.message);
-                    });
+                        ({ data }) => {
+                            this.message = data[0];
+                            this.body    = data[2];
+                            this.$emit('favorites', this.message, this.body);
+                            // console.log('pkaaaaaaaah2', this.message, this.body);
+                        });
             }
         }
     };

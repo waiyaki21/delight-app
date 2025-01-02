@@ -1,18 +1,16 @@
 <template>
     <div id="root">
-        <div class="relative bg-white dark:bg-gray-900 max-h-full">
-            <!-- flash -->
-            <flash 
-                ref="childComponentRef"
-            ></flash>
+        <div class="relative bg-gray-50 dark:bg-gray-900 max-h-full">
+            <!-- toast -->
+            <toast ref="toastNotificationRef"></toast>
             <!-- navigation menus -->
             <main-nav
-                v-bind:appname        = "appname"
-                v-bind:url            = "url"
-                v-bind:contact1       = "contact1"
-                v-bind:catfiles       = "catfiles"
+                :appname              = "appname"
+                :url                  = "url"
+                :contact1             = "contact1"
+                :catfiles             = "catfiles"
                 ref                   = "mainNavRef"
-                @flash                = "flash"
+                @flash                = "reloadflashShow"
                 @reloadproduct        = "getProducts"
                 @userinfo             = "setUser"
             ></main-nav>
@@ -24,11 +22,12 @@
                     class               = "mainview fullscreen"
                     :key                = "componentKey"
                     ref                 = "view"
-                    v-bind:url          = "url"
-                    v-bind:user         = "user"
-                    v-bind:logged       = "logged"
-                    v-bind:admin        = "admin"
-                    @flash              = "showFlash"
+                    :url                = "url"
+                    :user               = "user"
+                    :logged             = "logged"
+                    :admin              = "admin"
+                    @flash              = "reloadflashShow"
+                    @alert              = "reloadflashShow"
                     @cartinfo           = "updateCart"
                     @reloaduser         = "reloaduser"
                     @loaded             = "loaded"  
@@ -41,9 +40,9 @@
 
             <!-- plugins -->
             <main-plugin
-                v-bind:user             = "user"
-                v-bind:logged           = "logged"
-                v-bind:contact1         = "contact1"
+                :user                   = "user"
+                :logged                 = "logged"
+                :contact1               = "contact1"
                 ref                     = "pluginRef"
                 @opencatergory          = "getCatergoryModal"
                 @reloadproduct          = "getProducts"
@@ -60,7 +59,7 @@
 </template>
 
 <script>
-    import flash 			        from '../Components/AlertComponents/flash-simple.vue';
+    import toast 			        from '../Components/AlertComponents/new-flashSimple.vue';
     export default {
         props: [
             'catfiles',
@@ -68,6 +67,9 @@
 
         data() {
             return {
+                // Reference to the toast component
+                toastNotificationRef: null,
+
                 // datasets 
                 user:   {},
                 logged: '',
@@ -87,12 +89,11 @@
         },
 
         components : {
-            flash,
+            toast,
         },
 
         beforeMount() {
             this.getInfo();
-            // this.getUser();
         },
 
         methods: {
@@ -102,25 +103,6 @@
                 } else {
                     this.url = this.dev_url;
                 }
-            },
-
-            getUser() {
-                axios.get('/getUser/')
-                    .then(
-                    	({data}) => {
-                    		// this.user   = data[0]
-                            this.logged = data[1]
-                            // this.admin  = data[2]
-                            if (this.logged == true) {
-                                this.user   = data[0]
-                                this.admin  = data[2]
-                            } else {
-                                this.user = [
-                                    {'id':'0','name' :'Sign In','admin': '0'}
-                                ];
-                                this.admin = 0;
-                            }
-                    });
             },
 
             setUser([l, u, a]) {
@@ -136,7 +118,6 @@
             getProducts() {
                 this.componentKey += 1;
                 this.getInfo();
-                // this.$refs.view.mainReload();
             },
 
             updateCart(userinfo) {
@@ -163,13 +144,49 @@
                 this.$refs.mainNavRef.deleteCatergory(catergory);
             },
 
-            showFlash(message) {
-                this.$refs.childComponentRef.flash([message, 'bg-green-100']);
+            reloadflashShow(message, body) {
+                this.flashShow(message, body);
+                // console.log('main-flash-pkaaaaaah', message, body);
+                this.reloaduser();
             },
 
-            flash(message, color) {
-                this.$refs.childComponentRef.flash([message, color]);
+            // Method to handle the flash message
+            flashShow(message, body) {
+                if (message) {
+                    this.$nextTick(() => {
+                        if (this.$refs.toastNotificationRef) {
+                            this.$refs.toastNotificationRef.toastOn([message, body]);
+                        }
+                    });
+                }
             },
+
+            // flashClickShow method
+            flashClickShow(message, body, header, url, button, duration) {
+                if (message) {
+                    this.$nextTick(() => {
+                        if (this.$refs.toastNotificationRef) {
+                            this.$refs.toastNotificationRef.toastClick([message, body, header, url, button, duration]);
+                        }
+                    });
+                }
+            },
+
+            // flashTimed method
+            flashTimed(info, type, time) {
+                if (this.$refs.toastNotificationRef) {
+                    this.$refs.toastNotificationRef.toastOnTime([info, type, time]);
+                }
+            },
+
+            // flashHide method
+            flashHide(x) {
+                setTimeout(() => {
+                    if (this.$refs.toastNotificationRef) {
+                        this.$refs.toastNotificationRef.allHide();
+                    }
+                }, x);
+            }
         }
     }
 </script>

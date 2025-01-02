@@ -1,55 +1,60 @@
 <template>
-    <section class="fixed top-[4rem] right-5 flex-col z-[141] boldened overflow-y-scroll hidescroll max-h-[80%]" ref="flashContainer" v-if="this.show">
+    <section class="fixed top-[4rem] right-5 flex-col z-[141] boldened overflow-y-scroll no-scrollbar max-h-[80%]" ref="flashContainer" v-if="this.show">
         <TransitionGroup name="list" tag="div">
             <div v-for="flash in flashes" class="my-0.5 dark:bg-gradient-to-r dark:from-gray-800/30 dark:via-gray-800/20 dark:to-gray-800/10 pl-0.5 py-0.5 rounded-l-lg" :key="flash">
-                <!-- Flash Notification -->
-                <div :class="[flashClass(flash), { 'animate__animated animate__fadeInDown': !flash.isHiding, 'animate__animated animate__zoomOut': flash.isHiding }]" 
-                    role="alert" 
-                    v-if="flash.visible" 
-                    @click="hide(flash.id)" 
-                    @animationend="handleAnimationEnd">
-                    
-                    <!-- Header Section -->
-                    <div v-if="flash.click" class="inline-flex w-full justify-start gap-2">
-                        <!-- Icon -->
-                        <component :is="flash.icon" :class="flash.iconClass" v-if="flash.icon"></component>
+                <!-- button flash  -->
+                <div :class="[this.flashButton, flash.class, { 'animate__animated animate__fadeInDown': !flash.isHiding, 'animate__animated animate__zoomOut': flash.isHiding }]" role="alert" v-if="flash.click" @click="hide(flash.id)" @animationend="handleAnimationEnd">
+                    <!-- header  -->
+                    <div class="inline-flex w-full justify-start gap-2">
+                        <!-- icons  -->
+                        <component
+                            :is     = "flash.icon"
+                            :class  = "flash.iconClass"
+                            v-if    = "flash.icon"
+                        ></component>
+
+                        <!-- header  -->
                         <span class="sr-only">Info</span>
                         <h3 class="text-sm md:text-md font-medium uppercase underline">{{ flash.header }}</h3>
                     </div>
-                    
-                    <!-- Body -->
-                    <div :class="bodyClass(flash)" class="font-sans my-2 text-xs w-full text-left">
+                    <!-- body  -->
+                    <div class="font-sans font-semibold my-2 text-sm w-full text-left">
                         {{ flash.body }}
                     </div>
-                    
-                    <!-- Footer/Actions -->
-                    <div v-if="flash.click" class="inline-flex w-full justify-between gap-1">
-                        <ActionButton :buttonClass="'dark'" 
-                                    :tooltipText="`Go to link`" 
-                                    :buttonText="flash.button" 
-                                    class="rounded-md shadow-md w-full" 
-                                    @handleClick="flash.emit ? emitFlash(flash) : linkClick(flash.link)">
+                    <!-- close  -->
+                    <div class="inline-flex w-full justify-between gap-1">
+                        <ActionButton :buttonClass="'dark'" :tooltipText="`Go to link`" :buttonText="`${flash.button}`"
+                            class="rounded-md shadow-md w-full" @handleClick="flash.emit ? this.emitFlash(flash) : linkClick(flash.link)">
                             <right-icon class="mx-2 w-4 h-4 md:w-5 md:h-5 hover:rotate-180"></right-icon>
                         </ActionButton>
-                        <StyleButton :buttonClass="'danger'" 
-                                    :tooltipText="`Close Notification`" 
-                                    :buttonText="`Close`" 
-                                    class="rounded-md shadow-md flex-shrink-0" 
-                                    @handleClick="hide(flash.id)">
+                        <StyleButton :buttonClass="'danger'" :tooltipText="`Close Notification`" :buttonText="`Close`"
+                            class="rounded-md shadow-md text-black flex-shrink-0" @handleClick="hide(flash.id)">
                             <times-icon class="m-1 w-4 h-4 md:w-5 md:h-5"></times-icon>
                         </StyleButton>
                     </div>
-                    
-                    <!-- Close Button for Non-clickable Flash -->
-                    <button v-else type="button" 
-                            :class="closeButtonClass(flash)" 
-                            @click="hide(flash.id)">
+                </div>
+                <!-- regular flash  -->
+                <div :class="[this.flashNorm, flash.class, { 'animate__animated animate__fadeInDown': !flash.isHiding,'animate__animated animate__zoomOut': flash.isHiding }]" role="alert" v-if="!flash.click" @click="hide(flash.id)" @animationend="handleAnimationEnd">
+                    <!-- icons  -->
+                    <component
+                        :is     = "flash.icon"
+                        :class  = "flash.iconClass"
+                        v-if    = "flash.icon"
+                    ></component>
+                    <!-- body  -->
+                    <div :class="['ms-1 md:ms-3 text-lg font-normal boldened pt-1 px-2', flash.text]">
+                        {{ flash.body }}
+                    </div>
+                    <!-- close  -->
+                    <button type="button"
+                        :class="['ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 inline-flex items-center justify-center w-5 h-5 md:w-8 md:h-8',flash.text]"
+                        @click="hide(flash.id)">
                         <svg class="w-3 h-3" aria-hidden="true" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l6 6m0 0l6 6M7 7l6-6M7 7L1 13" />
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                         </svg>
                     </button>
                 </div>
-
             </div>
         </TransitionGroup>
     </section>
@@ -62,19 +67,6 @@
         ],
 
         data() {
-            const baseConfig = (icon, color, variant, type) => ({
-                icon,
-                textClass: `bg-${color}-50 text-${color}-500 focus:ring-${color}-200 dark:bg-${color}-800 dark:text-${color}-200`,
-                classType: `text-${variant}-800 border-${variant}-300 bg-${color}-50 dark:text-${color}-200 dark:bg-${color}-800 dark:border-${color}-800`,
-                [type]: true
-            });
-
-            const yellowConfig = {
-                textClass: `bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900`,
-                classType: `text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200`,
-                warning: true
-            };
-
             return {
                 show        : false,
                 body        : 'Test Sent successfully.',
@@ -91,43 +83,81 @@
                 flashes: [],  // Array to store flash messages
                 nextFlashId: 1,
 
-                flashButton: 'flex-col gap-1 items-center p-2 py-2 md:py-4 border rounded-md shadow-md cursor-pointer w-[17rem] md:w-[22.5rem]',
-                flashNorm:   'flex items-center p-2 py-3 border-base rounded-md shadow-md cursor-pointer w-[17rem] md:w-[22.5rem]',
+                flashButton: 'flex-col gap-1 items-center p-2 py-2 md:py-4 border rounded-md shadow-md cursor-pointer',
+                flashNorm:   'flex items-center p-2 py-3 border-base rounded-md shadow-md cursor-pointer',
 
                 classConfig: {
-                    success:    baseConfig('bellring-icon', 'emerald', 'emerald', 'success'),
-                    info:       baseConfig('info-icon', 'blue', 'blue', 'info'),
-                    sky:        baseConfig('info-icon', 'sky', 'sky', 'info'),
-                    danger:     baseConfig('warning-icon', 'rose', 'red', 'danger'),
-                    warm:       baseConfig('stop-icon', 'orange', 'orange', 'danger'),
-                    balance:    baseConfig('money-icon', 'rose', 'red', 'danger'),
-                    reload:     { icon: 'clock-icon', ...yellowConfig },
-                    warning:    { icon: 'stop-icon', ...yellowConfig },
-                    asc:        { icon: 'up-arrow', ...yellowConfig },
-                    desc:       { icon: 'down-arrow', ...yellowConfig },
-                    loading:    {
-                        icon:       'loading-icon',
-                        textClass:  `bg-transparent text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900`,
-                        classType:  yellowConfig.classType,
-                        warning:    true
+                    success: {
+                        icon: 'bellring-icon',
+                        textClass: 'bg-emerald-50 text-emerald-500 focus:ring-emerald-200 dark:bg-emerald-800 dark:text-emerald-200',
+                        classType: 'text-emerald-800 border-emerald-300 bg-emerald-50 dark:text-emerald-200 dark:bg-emerald-800 dark:border-emerald-800',
+                        success: true
+                    },
+                    info: {
+                        icon: 'info-icon',
+                        textClass: 'bg-blue-50 text-blue-500 focus:ring-blue-200 dark:bg-blue-800 dark:text-blue-200',
+                        classType: 'text-blue-800 border-blue-300 bg-blue-50 dark:text-blue-200 dark:bg-blue-800 dark:border-blue-800',
+                        info: true
+                    },
+                    sky: {
+                        icon: 'info-icon',
+                        textClass: 'bg-sky-50 text-sky-500 focus:ring-sky-200 dark:bg-sky-800 dark:text-sky-200',
+                        classType: 'text-sky-800 border-sky-300 bg-sky-50 dark:text-sky-200 dark:bg-sky-800 dark:border-sky-800',
+                        info: true
+                    },
+                    danger: {
+                        icon: 'warning-icon',
+                        textClass: 'bg-rose-50 text-rose-500 focus:ring-rose-200 dark:bg-red-800 dark:text-rose-200',
+                        classType: 'text-red-800 border-red-300 bg-red-50 dark:text-red-200 dark:bg-red-800 dark:border-red-800',
+                        danger: true
+                    },
+                    warm: {
+                        icon: 'stop-icon',
+                        textClass: 'bg-orange-50 text-orange-500 focus:ring-orange-200 dark:bg-orange-800 dark:text-orange-200',
+                        classType: 'text-orange-800 border-orange-300 bg-orange-50 dark:text-orange-200 dark:bg-orange-800 dark:border-orange-800',
+                        danger: true
+                    },
+                    balance: {
+                        icon: 'money-icon',
+                        textClass: 'bg-rose-50 text-rose-500 focus:ring-rose-200 dark:bg-red-800 dark:text-rose-200',
+                        classType: 'text-red-800 border-red-300 bg-red-50 dark:text-red-200 dark:bg-red-800 dark:border-red-800',
+                        danger: true
+                    },
+                    reload: {
+                        icon: 'clock-icon',
+                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
+                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        warning: true
+                    },
+                    warning: {
+                        icon: 'newstop-icon',
+                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
+                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        warning: true
+                    },
+                    asc: {
+                        icon: 'up-arrow',
+                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
+                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        warning: true
+                    },
+                    desc: {
+                        icon: 'down-arrow',
+                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
+                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        warning: true
+                    },
+                    loading: {
+                        icon: 'loading-icon',
+                        textClass: 'bg-transparent text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
+                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        warning: true
                     }
-                }
+                },
             }
         },
 
         methods: {
-            flashClass(flash) {
-                return [flash.click ? this.flashButton : this.flashNorm, flash.class];
-            },
-            
-            bodyClass(flash) {
-                return flash.click ? '' : `ms-1 md:ms-3 text-sm font-normal boldened pt-1 ${flash.text}`;
-            },
-
-            closeButtonClass(flash) {
-                return `ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 inline-flex items-center justify-center w-5 h-5 md:w-8 md:h-8 ${flash.text}`;
-            },
-
             state() {
                 this.success    = false;
                 this.info       = false;
@@ -176,7 +206,7 @@
                     // Show the flash message for 10 seconds, then remove it
                     setTimeout(() => {
                         this.flashes = this.flashes.filter(flash => flash.id !== newFlash.id);
-                    }, 10000);
+                    }, 1000000);
                 }
             },
 

@@ -22,7 +22,7 @@ class SearchController extends Controller
     {
         $result = Product::where('name','LIKE','%'.$name.'%')
                         // ->orWhere('email','LIKE','%'.$name.'%')
-                        ->with('catergory','brand')
+                        ->with('catergory','brand','favorites')
                         ->where('sold_out', '0')
                         ->orderBy('price', 'desc')
                         ->get();
@@ -51,7 +51,7 @@ class SearchController extends Controller
         // find products 
         $result = Product::where('name','LIKE','%'.$name.'%')
                         ->whereBetween('price', [$minPrice, $maxPrice])
-                        ->with('catergory','brand')
+                        ->with('catergory','brand','favorites')
                         ->where('sold_out', '0')
                         ->orderBy('price', 'desc')
                         ->get();
@@ -68,7 +68,7 @@ class SearchController extends Controller
         // find products 
         $result = Product::where('name','LIKE','%'.$name.'%')
                         ->whereBetween('price', [$minPrice, $maxPrice])
-                        ->with('catergory','brand')
+                        ->with('catergory','brand','favorites')
                         ->where('sold_out', '0')
                         ->orderBy('price', 'asc')
                         ->get();
@@ -85,7 +85,7 @@ class SearchController extends Controller
         // find products 
         $result = Product::where('name','LIKE','%'.$name.'%')
                         ->whereBetween('price', [$minPrice, $maxPrice])
-                        ->with('catergory','brand')
+                        ->with('catergory','brand','favorites')
                         ->where('sold_out', '0')
                         ->orderBy('created_at', 'desc')
                         ->get();

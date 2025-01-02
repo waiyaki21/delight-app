@@ -40,7 +40,7 @@ export default {
         let apiEndpoint = `/api/getProducts/${routeName}`;;  // Default endpoint
 
         // Conditionally set routeId based on route name
-        const routeId   = route.name === 'View Latest' ? 0 : route.params.id;
+        const routeId   = route.name === 'View Favorites' ? props.user.id : route.params.id;
 
         const {
             isLoading,

@@ -23,6 +23,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\ProductImageController;
+use App\Models\Favorite;
 
 class ProductController extends Controller
 {
@@ -432,5 +433,58 @@ class ProductController extends Controller
                             ->sum('price');
 
         return [$all, $inStock, $outOfStock, $allSum, $inStockSum, $outOfStockSum];
+    }
+
+    public function getLatestProducts($id)
+    {
+        $products   =   Product::where([
+                                    ['sold_out', '0'],
+                                ])
+                                ->orderBy('created_at', 'desc')
+                                ->with('thumbnail', 'brand','catergory','favorites')
+                                ->take(16)
+                                ->get();
+
+        $name = 'Latest Arrivals';
+
+        return [$name, $products];
+    }
+
+    public function getCatergoryProducts(Catergory $catergory)
+    {
+        $products = Product::where('catergory_id', $catergory->id)
+                            ->where('sold_out', '0')
+                            ->orderBy('created_at', 'asc')
+                            ->with('thumbnail','brand','catergory', 'favorites')
+                            ->get();
+
+        return [$catergory->name, $products];
+    }
+
+    public function getBrandProducts(Brand $brand)
+    {
+        $products = Product::where('brand_id', $brand->id)
+                            ->where('sold_out', '0')
+                            ->orderBy('created_at', 'asc')
+                            ->with('thumbnail', 'brand', 'catergory', 'favorites')
+                            ->get();
+
+        return [$brand->name, $products];
+    }
+
+    public function getFavoritesProducts($id)
+    {
+        // Get a user and load their favorite products
+        $user = User::with('favorites.product')->find($id);
+
+        // Get all the products from favorites
+        $products = $user->favorites()
+                                ->with('product.thumbnail', 'product.brand', 'product.catergory', 'product.favorites')
+                                ->get()
+                                ->pluck('product');
+
+        $name = 'Favorites';
+
+        return [$name, $products];
     }
 }

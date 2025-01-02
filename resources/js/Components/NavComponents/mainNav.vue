@@ -372,8 +372,8 @@
                     	({data}) => {
                             this.logged = data[1]
                             if (this.logged) {
-                                this.user   = data[0]
-                                this.admin  = data[2]
+                                this.user       = data[0]
+                                this.admin      = data[2]
                                 this.favorites  = data[3];
                                 this.cartItems  = data[4];
                                 this.getNotifications();
@@ -381,10 +381,10 @@
                                 this.user = [
                                     {'name' :'none','admin':'0'}
                                 ];
-                                this.admin = 0;
-                                this.favorites = 0;
-                                this.cartItems = 0;
-                                this.notifications = 0;
+                                this.admin          = 0;
+                                this.favorites      = 0;
+                                this.cartItems      = 0;
+                                this.notifications  = 0;
                             }
                             this.$emit('userinfo', [this.logged, this.user, this.admin]);
                     });
@@ -435,7 +435,7 @@
 				axios.get('/notifications/'+this.user.id);
                 this.getNotifications();
                 this.flashMessage = 'All ' + not_no +' Notifications cleared!';
-                this.$emit('flash', [this.flashMessage, 'bg-green-100']); 
+                this.$emit('flash', this.flashMessage, 'success'); 
 			},
 
             getCatergoriesLoad() {
@@ -452,7 +452,7 @@
 
             update(message) {
                 this.flashMessage = message;
-                this.$emit('flash', [this.flashMessage, 'bg-green-100']);
+                this.$emit('flash', this.flashMessage, 'success');
                 this.reload();
                 // this.getCatergories();
             },
@@ -527,7 +527,7 @@
 	                axios.delete('/catergory/delete/'+catergory.id)
 	                    .then(response => {
 	                    	this.flashMessage = 'The catergory: ' + name + ' has been deleted!';
-	                    	this.$emit('flash', [this.flashMessage, 'bg-red-100']);
+	                    	this.$emit('flash', this.flashMessage, 'danger');
                             this.getCatergories();
 	                 	});
 			   }
@@ -539,7 +539,7 @@
                     axios.delete('/brand/delete/' + brand.id)
                         .then(response => {
                             this.flashMessage = 'The brand: ' + name + ' has been deleted!';
-                            this.$emit('flash', [this.flashMessage, 'bg-red-100']);
+                            this.$emit('flash', this.flashMessage, 'danger');
                             this.getCatergories();
                         });
                 }

@@ -53,6 +53,18 @@ Route::controller(ProductController::class)->middleware('api')->group(function (
     // get all products
     Route::get('/getProducts','getProducts');
 
+    // get all products catergory
+    Route::get('/getProducts/catergory/{catergory}', 'getCatergoryProducts');
+
+    // get all products brand
+    Route::get('/getProducts/brand/{brand}', 'getBrandProducts');
+
+    // get all products latest
+    Route::get('/getProducts/latest/{id}', 'getLatestProducts');
+
+    // get all products favorites
+    Route::get('/getProducts/favorites/{id}', 'getFavoritesProducts');
+
     // get a product
     Route::get('/getProduct/{product}','getProduct');
     

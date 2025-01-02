@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
+    public function show()
+    {
+        return view('home');
+    }
+
     // Display a list of the user's favorite products
     public function index()
     {
@@ -33,6 +38,7 @@ class FavoriteController extends Controller
             $favorite = $user->favorites()->where('product_id', $product->id)->first();
             $this->destroy($favorite->id);
             $message = $product->name . ' :Removed from Wishlist.';
+            $body = 'danger';
         } else {
             // Add to favorites
             $favorite = new Favorite();
@@ -41,10 +47,11 @@ class FavoriteController extends Controller
             $favorite->save();
 
             $message = $product->name. ' :Added to wishlist.';
+            $body = 'success';
         }
 
         $favorites = Favorite::where('user_id', $user->id)->get();
-        return [$message, $favorites];
+        return [$message, $favorites, $body];
     }
 
     // Remove a product from the user's favorites

@@ -79,6 +79,12 @@ const routes = [
 		component: () => import("./Components/CatergoryComponents/viewLatest.vue"),
 	},
 	{
+		path: "/show/favorites/:id",
+		name: "View Favorites",
+		props: { default: true },
+		component: () => import("./Components/FavoritesComponents/viewFavorites.vue"),
+	},
+	{
 		path: "/search/:id",
 		name: "Search",
 		props: { default: true},

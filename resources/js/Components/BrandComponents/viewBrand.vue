@@ -1,87 +1,21 @@
 <template>
     <div>
-        <flash 
-            ref             ="childComponentRef"
-        ></flash>
-        <loading-body
-            v-if="isloading == true"
-        ></loading-body>
-        <div class="container bg-blueGray-50 dark:bg-gray-900 max-h-full" v-else>
+        <loading-body v-if="isloading == true"></loading-body>
+        <div class="mx-auto bg-gray-50 dark:bg-gray-900 max-h-full mt-24 pt-2 w-[90%]" v-else>
             <h2 class="text-black uppercase text-4xl mt-4 mb-1 flex justify-between border-b border-gray-600 w-full">
-                {{ brand.name }} Products.
+                {{ info }}.
                 <div class="flex">
-                    <list-icon :class="['mx-2 h-6 w-6', this.listActive]" title="Arrange Products in Lists" @click="orderList"></list-icon>
-                    <cards-icon :class="['mx-2 h-6 w-6', this.cardActive]" title="Arrange Products in Cards" @click="orderCard"></cards-icon>
+                    <list-icon :class="[this.toggleBtn]" title="Arrange Products in Lists" @click="orderList"
+                        v-show="!this.showList"></list-icon>
+                    <cards-icon :class="[this.toggleBtn]" title="Arrange Products in Cards" @click="orderCard"
+                        v-show="this.showList"></cards-icon>
                 </div>
             </h2>
             <h2 class="text-black uppercase text-base mb-1 flex">
-                ( {{ Number(brand.in_stock_products.length).toLocaleString() }} Products)
+                ( {{ Number(products.length).toLocaleString() }} Products)
             </h2>
-            <!-- brand products  -->
-            <!-- rows  -->
-            <div class="max-w-md mx-auto my-2 bg-white hover:shadow overflow-hidden md:max-w-2xl border border-gray-200" v-for="product in brand.in_stock_products" v-if="showList">
-                <div class="flex">
-                    <div class="md:shrink-0 py-2">
-                        <a :href="'/product_show/'+product.id">  
-                            <img class="" :src="product.thumbnail_path" :alt="'Delight Electronics ' +product.name" style="width: 240px;height: 180px;" v-if="product.catergory.name == 'TVs'">
-                            <img class="object-cover" :src="product.thumbnail_path" :alt="'Delight Electronics ' +product.name" style="width: 220px;height: 220px;" v-else>
-                        </a>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex">
-                            <a :href="'/catergory/'+product.catergory_id" class="bg-white text-black text-sm p-1 mx-1 uppercase border border-gray-300 hover:bg-black hover:text-white hover:underline">
-                                {{ product.catergory.name }}
-                            </a>
-                            <a :href="'/brand/'+product.brand_id" class=" bg-white text-black text-sm p-1 mx-1 uppercase border border-gray-300 hover:bg-black hover:text-white hover:underline">
-                                {{ brand.name }}
-                            </a>
-                        </div>
-                        <a :href="'/product_show/'+product.id" class="text-xl font-normal text-gray-700 hover:text-black dark:text-white hover:underline uppercase">
-                            {{ product.name }}
-                        </a>
-                        <p class="">
-                            <span class="text-2xl font-bold uppercase text-gray-900 dark:text-white">ksh {{ Number(product.price).toLocaleString() }}</span>
-                        </p>
-                        <a :href="'/product_show/'+product.id" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-1 focus:ring-gray-200 font-medium text-lg px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex items-center px-auto justify-between w-full">
-                            Add To cart
-                            <shopping-icon class="h-6 w-6 mx-2"></shopping-icon>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- cards  -->
-            <div class="row justify-center" v-if="showCard">
-                <div class="col-sm-6 m-2 bg-white border border-gray-200 hover:shadow dark:bg-gray-800 dark:border-gray-700 item-card" v-for="product in brand.in_stock_products">
-                    <a :href="'/product_show/'+product.id" class="flex justify-center">
-                        <img class="py-2" :src="product.thumbnail_path" :alt="'Delight Electronics ' +product.name" />
-                    </a>
-                    <hr class="width-hr mx-auto mb-1 border-b border-blueGray-200" />
-                    <div class="p-5">
-                        <a :href="'/product_show/'+product.id">
-                            <h5 class="text-2xl font-normal text-gray-500 hover:text-black dark:text-white hover:underline uppercase">
-                                {{ product.name }}
-                                <br>
-                                <div class="flex">
-                                    <a :href="'/catergory/'+product.catergory_id" class="bg-white text-black text-sm p-1 mx-1 uppercase border border-gray-300 hover:bg-black hover:text-white hover:underline">
-                                        {{ product.catergory.name }}
-                                    </a>
-                                    <a :href="'/brand/'+product.brand_id" class=" bg-white text-black text-sm p-1 mx-1 uppercase border border-gray-300 hover:bg-black hover:text-white hover:underline">
-                                        {{ brand.name }}
-                                    </a>
-                                </div>
-                            </h5>
-                        </a>
-                        <p class="mb-2">
-                            <span class="text-2xl font-bold uppercase text-gray-900 dark:text-white">ksh {{ Number(product.price).toLocaleString() }}</span>
-                        </p>
-                        <a :href="'/product_show/'+product.id" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-1 focus:ring-gray-200 font-medium text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex items-center px-auto justify-between w-full">
-                            Add To cart
-                            <shopping-icon class="h-6 w-6 mx-2"></shopping-icon>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <!-- products grid/card view  -->
+            <productsView :products="products" :show-list="this.showList" :show-btn="this.showBtn" :grid-class="this.gridClass" :logged="logged" @favorites="reloadWithMessage" />
         </div>
     </div>
 
@@ -91,76 +25,69 @@
 </template>
 
 <script>
-    import flash                  from '../AlertComponents/flash-simple.vue';
-    // import icons 
-    import { 
-        ListBulletIcon,
-        Square2StackIcon,
-        ShoppingCartIcon 
-    }                                                               from '@heroicons/vue/24/outline';
-    export default {
-        props: [
+import { computed }     from 'vue';
+import { useRoute }     from 'vue-router';
+import useProductView   from '../../Composables/useProductView';
+import productsView     from '../../Utilities/Products/ProductsView.vue';
 
-        ],
+export default {
+    props: ['user', 'logged'],
+    components: { productsView },
+    setup(props, { emit }) {
+        const route = useRoute();
+        // Extract the last word from route.name and lowercase it
+        const routeName = route.name ? route.name.split(' ').pop().toLowerCase() : '';
+        let apiEndpoint = `/api/getProducts/${routeName}`;;  // Default endpoint
 
-        data() {
-            return {
-                // load 
-                isloading: true,
+        // Conditionally set routeId based on route name
+        const routeId   = route.name === 'View Latest' ? 0 : route.params.id;
 
-                //page info
-                showList: true,
-                showCard: false,
-                cardActive: '',
-                listActive: '',
+        const {
+            isLoading,
+            info,
+            products,
+            gridClass,
+            btnClass,
+            showList,
+            showBtn,
+            fetchProducts,
+            updatedProducts,
+            reloadProducts,
+            getWindowWidth,
+        } = useProductView(apiEndpoint);
 
-                // dataset 
-                brand: {}
-            }
-        },
+        // Fetch initial products
+        fetchProducts(routeId);
 
-        components: {
-            flash,
-            ShoppingCartIcon,
-            ListBulletIcon,
-            Square2StackIcon
-        },
+        // Add event listener for window resize
+        window.addEventListener('resize', () => {
+            getWindowWidth();
+        });
 
-        beforeMount() {
-            this.isloading = true;
-            this.getBrand();
-        },
+        // Modify products with updatedProducts
+        const processedProducts = computed(() => updatedProducts(products.value, props.user));
 
-        methods: {
-            loaded() {
-                this.isloading = false;
-            },
+        // Method to reload products and show a message
+        const reloadWithMessage = (message, body) => {
+            reloadProducts(message, routeId);
+            flashShow(message, body);
+        };
 
-            getBrand() {
-                let brand_id = this.$route.params.id;
-                axios.get('/api/getBrand/'+ brand_id)
-                    .then(
-                    	({data}) => {
-                            this.brand     = data;
-                            this.orderList();
-                            this.loaded();
+        // Define the flashShow method to emit a flash message
+        const flashShow = (message, body) => {
+            emit('flash', message, body);
+        };
 
-                    });
-            },
-
-            orderList() {
-                this.showCard = false;
-                this.showList = true;
-                this.cardActive = 'text-gray-500 cursor-pointer';
-                this.listActive = 'text-black cursor-not-allowed';  
-            },
-
-            orderCard() {
-                this.showCard = true;
-                this.showList = false; 
-                this.cardActive = 'text-black cursor-not-allowed';
-                this.listActive = 'text-gray-500 cursor-pointer';  
-            },
-        }
+        return {
+            isLoading,
+            info,
+            products: processedProducts, // Use processedProducts in your template
+            gridClass,
+            btnClass,
+            showList,
+            showBtn,
+            reloadWithMessage
+        };
     }
+};
 </script>

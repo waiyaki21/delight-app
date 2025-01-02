@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-  <main-search
+  <main-body
     v-bind:catfiles       = "{{ $catergories }}"
-  ></main-search>
+  ></main-body>
 @endsection

@@ -150,9 +150,9 @@ Route::controller(ImageUploadController::class)->group(function () {
 
 Route::middleware(['auth'])->controller(FavoriteController::class)->group(function () {
 
-    Route::get('/favorites', 'index')->name('favorites.get');
+    Route::get('/favorites/{id}', 'show')->name('View Favorites');
 
-    Route::get('/favorites/{id}', 'store')->name('favorites.store');
+    Route::get('/favorites/switch/{id}', 'store')->name('favorites.store');
 
     Route::delete('/favorites/{id}', 'destroy')->name('favorites.delete');
 });

@@ -8,7 +8,7 @@ const commonExtract = [
 ];
 
 mix
-    .js('resources/js/app.js', 'public/js/app8.js')
+    .js('resources/js/app.js', 'public/js/app.js')
     .vue()
     .extract([
         'moment',
@@ -18,12 +18,12 @@ mix
     ])
     .version()
 
-    .js('resources/js/search.js', 'public/js/search.js')
-    .vue()
-    .extract([
-        ...commonExtract
-    ])
-    .version()
+    // .js('resources/js/search.js', 'public/js/search.js')
+    // .vue()
+    // .extract([
+    //     ...commonExtract
+    // ])
+    // .version()
 
     .postCss('resources/css/main.css', 'public/css/main.css', [
         require('tailwindcss'),

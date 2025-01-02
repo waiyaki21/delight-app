@@ -1,6 +1,5 @@
 <template>
-    <div class="relative bg-white dark:bg-gray-900 md:pt-2 pb-2 pt-2" style="padding-top: 2rem;">
-        <flash ref="childComponentRef"></flash>
+    <div class="relative bg-gray-50 dark:bg-gray-900 md:pt-2 pb-2 pt-2" style="padding-top: 2rem;">
         <!-- loader  -->
         <loading-body v-if="isloading == true"></loading-body>
         <!-- body  -->
@@ -89,7 +88,6 @@
 </template>
 
 <script>
-    import flash                                                    from '../AlertComponents/flash-simple.vue';
     import carousel                                                 from './carousels/bannerCarousel.vue';
     import cardSlider                                               from './carousels/SliderCarousel.vue';
     import categoriesSlider                                         from './carousels/catergoriesSlider.vue';
@@ -146,7 +144,6 @@
         components: {
             // authModal,
             carousel,
-            flash,
             Swiper,
             SwiperSlide,
             cardSlider,
@@ -187,7 +184,7 @@
                 if (!this.user) {
                     return infos; // If user is not available, return items without modification
                 }
-                console.log(this.user.id);
+                // console.log(this.user.id);
                 return infos.map(product => {
                     // Ensure user.id and favorite.user_id are both strings (or both numbers)
                     const isFavorited = Array.isArray(product.favorites) && 
@@ -267,7 +264,7 @@
                 // this.isloading = true;
                 this.getProducts();
                 this.getCatergories();
-                this.$emit('flash', message);
+                this.$emit('flash', message, 'info');
             },
 
             editCatergory(catergory) {

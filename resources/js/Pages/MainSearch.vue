@@ -1,13 +1,13 @@
 <template>
     <div id="root">
-        <div class="relative bg-white dark:bg-gray-900 max-h-full">
+        <div class="relative bg-gray-50 dark:bg-gray-900 max-h-full">
             <!-- navigation menus -->
             <main-nav
-                v-bind:appname        = "appname"
-                v-bind:url            = "url"
-                v-bind:contact1       = "contact1"
-                v-bind:contact2       = "contact2"
-                v-bind:catfiles       = "catfiles"
+                :appname              = "appname"
+                :url                  = "url"
+                :contact1             = "contact1"
+                :contact2             = "contact2"
+                :catfiles             = "catfiles"
                 ref                   = "mainNavRef"
                 @reloadproduct        = "getProducts"
             ></main-nav>
@@ -25,8 +25,8 @@
 
             <!-- plugins -->
             <main-plugin
-                v-bind:user             = "user"
-                v-bind:logged           = "logged"
+                :user                   = "user"
+                :logged                 = "logged"
                 ref                     = "pluginRef"
                 @opencatergory          = "getCatergoryModal"
                 @reloadproduct          = "getProducts"

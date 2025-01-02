@@ -29,12 +29,14 @@ import searchBody       from './Components/SearchComponents/viewSearch.vue'
 import footerBody       from './Components/BodyComponents/FooterBody.vue'
 
 // flash messages
-import flashMessage     from './Components/AlertComponents/flash-simple.vue'
+import toast            from './Components/AlertComponents/new-flashSimple.vue'
 
 // import icons 
-import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon }   from '@heroicons/vue/24/outline';
+import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon, BellAlertIcon, ExclamationTriangleIcon, ClockIcon, CurrencyDollarIcon, CheckCircleIcon,BellSnoozeIcon,ArrowPathIcon
+ }   from '@heroicons/vue/24/outline';
 
-import favoriteSolid from './Utilities/Icons/favoriteSolid-icon.vue';
+import favoriteSolid    from './Utilities/Icons/favoriteSolid-icon.vue';
+import infoIcon         from "./Utilities/Icons/infoIcon.vue";
 
 const app = createApp({})
 app
@@ -49,7 +51,7 @@ app
         .component('footer-body',   footerBody)
 
         // assistants
-        .component('flash-message',   flashMessage)
+        .component('flash-message',   toast)
 
         // icon components 
         .component('edit-icon',         PencilSquareIcon)
@@ -82,6 +84,17 @@ app
         .component('user-icon',         UserCircleIcon)
         .component('favorite-icon',     HeartIcon)
         .component('favSolid-icon',     favoriteSolid)
+
+        .component('bellring-icon',     BellAlertIcon)
+        .component('info-icon',         infoIcon)
+        .component('warning-icon',      ExclamationTriangleIcon)
+        .component('newstop-icon',      NoSymbolIcon)
+        .component('clock-icon',        ClockIcon)
+        .component('money-icon',        CurrencyDollarIcon)
+        .component('checkcircle-icon',  CheckCircleIcon)
+        .component('snooze-icon',       BellSnoozeIcon)
+        .component('star-icon',         SparklesIcon)
+        .component('loading-icon',      ArrowPathIcon)
         // end icon components 
 
         .use(router)
