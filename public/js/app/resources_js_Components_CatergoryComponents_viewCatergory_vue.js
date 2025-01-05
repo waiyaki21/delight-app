@@ -115,6 +115,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_loading_body = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("loading-body");
   var _component_list_icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("list-icon");
   var _component_cards_icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("cards-icon");
+  var _component_no_products = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("no-products");
   var _component_productsView = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("productsView");
   var _component_footer_body = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("footer-body");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_ctx.isloading == true ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_loading_body, {
@@ -127,14 +128,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([this.toggleBtn]),
     title: "Arrange Products in Cards",
     onClick: _ctx.orderCard
-  }, null, 8 /* PROPS */, ["class", "onClick"]), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, this.showList]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", _hoisted_4, " ( " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Number($setup.products.length).toLocaleString()) + " Products) ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" products grid/card view  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_productsView, {
+  }, null, 8 /* PROPS */, ["class", "onClick"]), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, this.showList]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", _hoisted_4, " ( " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Number($setup.products.length).toLocaleString()) + " Products) ", 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" products grid/card view  "), !$setup.products ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_no_products, {
+    key: 0,
+    user: $props.user
+  }, null, 8 /* PROPS */, ["user"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_productsView, {
+    key: 1,
     products: $setup.products,
     "show-list": this.showList,
     "show-btn": this.showBtn,
     "grid-class": this.gridClass,
     logged: $props.logged,
     onFavorites: $setup.reloadWithMessage
-  }, null, 8 /* PROPS */, ["products", "show-list", "show-btn", "grid-class", "logged", "onFavorites"])]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" footer  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_footer_body), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" end footer  ")], 64 /* STABLE_FRAGMENT */);
+  }, null, 8 /* PROPS */, ["products", "show-list", "show-btn", "grid-class", "logged", "onFavorites"]))]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" footer  "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_footer_body), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" end footer  ")], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

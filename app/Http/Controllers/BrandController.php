@@ -104,8 +104,17 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        $brand = Brand::where('id', $brand->id)
-                        ->first();
+        $brand      = Brand::where('id', $brand->id)->first();
+
+        $products   = Product::where('brand_id', $brand->id)->get();
+
+        // get Controllers 
+        $productsDelete = new ProductController();
+
+        // get product & delete
+        foreach ($products as $product) {
+            $productsDelete->destroy($product->id);
+        }
 
         $brand->delete();
 

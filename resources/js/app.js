@@ -32,12 +32,18 @@ import footerBody       from './Components/BodyComponents/FooterBody.vue'
 import toast            from './Components/AlertComponents/new-flashSimple.vue'
 
 // import icons 
-import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon, BellAlertIcon, ExclamationTriangleIcon, ClockIcon, CurrencyDollarIcon, CheckCircleIcon,BellSnoozeIcon,ArrowPathIcon
+import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon, BellAlertIcon, ExclamationTriangleIcon, ClockIcon, CurrencyDollarIcon, CheckCircleIcon,BellSnoozeIcon,ArrowPathIcon, MinusIcon
  }   from '@heroicons/vue/24/outline';
 
+// Utilities 
 import favoriteSolid    from './Utilities/Icons/favoriteSolid-icon.vue';
 import infoIcon         from "./Utilities/Icons/infoIcon.vue";
+import NoProducts       from './Utilities/Products/NoProducts.vue';
+import modalHeader      from './Utilities/Modals/modalHeader.vue';
+import Tooltip          from './Utilities/Tooltips/tooltip.vue';
 
+import actionButton     from './Utilities/Buttons/actionButton.vue';
+import styleButton      from './Utilities/Buttons/styleButton.vue';
 const app = createApp({})
 app
         .component('main-body',     appBody)
@@ -63,6 +69,7 @@ app
         .component('search-icon',       MagnifyingGlassIcon)
         .component('bars-icon',         Bars3Icon)
         .component('plus-icon',         PlusIcon)
+        .component('minus-icon',        MinusIcon)
         .component('phone-icon',        PhoneIcon)
         .component('down-icon',         ChevronDownIcon)
         .component('left-icon',         ChevronLeftIcon)
@@ -96,6 +103,15 @@ app
         .component('star-icon',         SparklesIcon)
         .component('loading-icon',      ArrowPathIcon)
         // end icon components 
+
+        // utilities 
+        .component('no-products',       NoProducts)
+        .component('modal-header',      modalHeader)
+        .component('tooltip',           Tooltip)
+
+        // buttons
+        .component('ActionButton',      actionButton)
+        .component('StyleButton',       styleButton)
 
         .use(router)
         .mount('#app');

@@ -1,7 +1,5 @@
 <template>
-    <nav 
-        class="fixed w-full bg-white border-b-2 border-black px-2 sm:px-4 pt-2 dark:bg-gray-900 shadow z-40"
-        :style="{ opacity: navbarOpacity, transtion: 'opacity 0.1s ease' }">
+    <nav ref="navbar" class="fixed w-full bg-white border-b-2 border-black px-2 sm:px-4 pt-2 dark:bg-gray-900 shadow z-40" :style="{ opacity: navbarOpacity, transtion: 'opacity 0.1s ease' }">
         <div class="flex flex-wrap items-center justify-between mx-auto">
             <!-- Main Logo  -->
             <a href="/" class="flex items-center">
@@ -12,54 +10,54 @@
             </a>
 
             <!-- ALL ICONS LIST  -->
-            <div class="flex items-center md:order-2">
-                <!-- menu  -->
-                <button type="button" class="inline-flex nav-xs-hidden items-center p-2 ml-1 text-sm text-black  hover:bg-transparent hover:text-black dark:text-gray-400 dark:hover:bg-gray-700 " data-drawer-target="drawer" data-drawer-show="drawer" data-drawer-body-scrolling="false" aria-controls="drawer">
+            <div class="md:flex md:items-center inline-flex items-center md:order-2 xs-max:w-full justify-end xs-max:space-x-2">
+                <!-- menu bar -->
+                <button type="button" :class="this.linkClass" data-drawer-target="drawer" data-drawer-show="drawer" data-drawer-body-scrolling="false" aria-controls="drawer">
                     <span class="sr-only">Open main menu</span>
-                    <bars-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></bars-icon>
+                    <bars-icon :class="this.iconClass"></bars-icon>
                 </button>
-                <div class="divider px-1 text-black xs-hidden"></div>
+                <div class="divider px-1 text-black"></div>
 
                 <!-- shopping cart -->
-                <a href="/login" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1 xs-hidden" v-if="logged == false">
-                    <shopping-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></shopping-icon>
-                    <div class="inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-sm text-black bg-gray-200 rounded-full border-2 border-black dark:border-gray-900">
+                <a href="/login" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1 xs-hidden" v-if="!logged">
+                    <shopping-icon :class="this.iconClass"></shopping-icon>
+                    <div :class="this.badgeClass">
                         0
                     </div>
                 </a>
                 <!-- end shopping cart -->
 
                 <!-- favorites items -->
-                <router-link :to="'/favorites/'+user.id" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1" v-if="logged">
-                    <favorite-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></favorite-icon>
-                    <div class="inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-sm text-black bg-gray-200 rounded-full border-2 border-black dark:border-gray-900">
+                <router-link :to="'/favorites/'+user.id" type="button" :class="this.linkClass" v-if="logged">
+                    <favorite-icon :class="this.iconClass"></favorite-icon>
+                    <div :class="this.badgeClass">
                         {{ this.favorites }}
                     </div>
                 </router-link>
-                <div class="divider px-1 text-black xs-hidden"></div>
+                <div class="divider px-1 text-black"></div>
                 <!-- end favorites items-->
 
                 <!-- cart items -->
-                <router-link :to="'/checkout/'+user.id" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1" v-if="logged">
-                    <shopping-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></shopping-icon>
-                    <div class="inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-sm text-black bg-gray-200 rounded-full border-2 border-black dark:border-gray-900">
+                <router-link :to="'/checkout/'+user.id" type="button" :class="this.linkClass" v-if="logged">
+                    <shopping-icon :class="this.iconClass"></shopping-icon>
+                    <div :class="this.badgeClass">
                         {{ this.cartItems }}
                     </div>
                 </router-link>
-                <div class="divider px-1 text-black xs-hidden"></div>
+                <div class="divider px-1 text-black"></div>
                 <!-- end cart items-->
 
                 <!-- search -->
                 <button type="button" class="inline-flex relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1" @click="showSearch">
-                    <search-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></search-icon>
+                    <search-icon :class="this.iconClass"></search-icon>
                 </button>
-                <div class="divider px-1 text-black xs-hidden"></div>
+                <div class="divider px-1 text-black"></div>
                 <!-- end notification -->
 
                 <!-- notification -->
-                <button type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1" v-if="logged == true" @click="showNotification">
-                    <bell-icon class="h-6 w-6 xs-max:h-4 xs-max:w-4"></bell-icon>
-                    <div class="inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-sm text-black bg-gray-200 rounded-full border-2 border-black dark:border-gray-900">
+                <button type="button" :class="this.linkClass" v-if="logged" @click="showNotification">
+                    <bell-icon :class="this.iconClass"></bell-icon>
+                    <div :class="this.badgeClass">
                         {{ this.notifications.length }}
                     </div>
                 </button>
@@ -78,8 +76,8 @@
                                             {{ fromDate(notification.created_at) }}
                                         </p>
                                     </div>
-                                </div>
-                                <hr class="width-hr mx-auto mb-1 border-b border-blueGray-200" />
+                                </div> 
+                                <hr class="width-hr mx-auto mb-1 border-b border-gray-500" />
                             </a>
                             <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap bg-white text-black px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" :href="'/notification/'+notification.id" v-else>
                                 <div class="flex py-1 px-1">
@@ -93,7 +91,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <hr class="width-hr mx-auto mb-1 border-b border-blueGray-200" />
+                                <hr class="width-hr mx-auto mb-1 border-b border-gray-500" />
                             </a>
                         </li>
                         <div class="px-4 py-3">
@@ -119,15 +117,13 @@
                         </div>
                     </ul>
                 </div>
-                <div class="divider px-1 text-black xs-hidden" v-if="logged == true"></div>
+                <div class="divider px-1 text-black" v-if="logged"></div>
                 <!-- end notification -->
 
                 <!-- user -->
-                <button type="button" class="mr-1 text-base xs-max:text-sm bg-transparent text-black uppercase md:mr-0 focus:ring-0 focus:ring-gray-300 dark:focus:ring-gray-600" @click="showUser" v-if="logged == true">
-                    <user-icon class="w-6 h-6"/> 
-                </button>
-                <button type="button" class="mr-1 text-base xs-max:text-sm bg-transparent text-black uppercase md:mr-0 focus:ring-0 focus:ring-gray-300 dark:focus:ring-gray-600" @click="showUser" v-else>
-                    Sign in/up
+                <button type="button" :class="this.linkClass" @click="showUser">
+                    <user-icon :class="this.iconClass" v-if="logged"/> 
+                    <span v-else>Sign in/up</span>
                 </button>
                 <!-- User Menu Options -->
                 <div :class="[this.userClass]" @mouseleave="showUser">
@@ -249,6 +245,10 @@
         @reloadproduct      = "reload"
         ref 			    = "productRef" 
         @add                = "showNewBrandModal"
+        @flash              = "flashShow"
+        @hide               = "flashHide"
+        @timed              = "flashTimed"
+        @click              = "flashClickShow"
     ></productModal>
 
     <!-- search modal  -->
@@ -326,44 +326,71 @@
                 // dropdown classess
                 userClass: 'z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 border border-black inset-menu',
                 notificationClass: 'z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 border border-black inset-menu',
+                linkClass: 'group relative items-center text-center rounded-lg text-lg p-1 mx-auto',
+                iconClass: 'h-6 w-6 text-black group-hover:text-cyan-700',
+                badgeClass: 'inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-lg text-black bg-gray-200 rounded-full border-2 border-black xs-max:-top-1 xs-max:-right-1 xs-max:w-4 xs-max:h-4 xs-max:border group-hover:bg-gray-800 group-hover:border-cyan-300 group-hover:shadow-md group-hover:text-white',
 
                 lastScrollPosition: 0,
                 isScrollingDown: false,
                 navbarOpacity: 1,
+                isHovered: false,
+                previousOpacity: 1
             }
-        },
-
-        mounted() {
-            this.getCatergoriesLoad();
-            window.addEventListener("scroll", this.handleScroll);
         },
 
         beforeMount() {
             this.getUser();
         },
 
-        beforeUnmount() {
-            window.removeEventListener("scroll", this.handleScroll);
+        mounted() {
+            this.getCatergoriesLoad();
+            window.addEventListener('scroll', this.handleScroll);
+            this.$refs.navbar.addEventListener('mouseenter', this.handleMouseEnter);
+            this.$refs.navbar.addEventListener('mouseleave', this.handleMouseLeave);
+        },
+
+        beforeDestroy() {
+            window.removeEventListener('scroll', this.handleScroll);
+            this.$refs.navbar.removeEventListener('mouseenter', this.handleMouseEnter);
+            this.$refs.navbar.removeEventListener('mouseleave', this.handleMouseLeave);
         },
 
         methods: {
             handleScroll() {
                 const currentScrollPosition = window.scrollY;
 
-                if (currentScrollPosition === 0) {
-                    // At the top of the page, set opacity to 1
+                // If mouse is hovered, override scroll opacity behavior and set to 1
+                if (this.isHovered) {
                     this.navbarOpacity = 1;
-                } else if (currentScrollPosition > this.lastScrollPosition) {
-                    // Scrolling Down
-                    this.isScrollingDown = true;
-                    this.navbarOpacity = Math.max(0, this.navbarOpacity - 0.1); // Gradual fade out
                 } else {
-                    // Scrolling Up
-                    this.isScrollingDown = false;
-                    this.navbarOpacity = Math.min(1, this.navbarOpacity + 0.1); // Gradual fade in
+                    if (currentScrollPosition === 0) {
+                        // At the top of the page, set opacity to 1
+                        this.navbarOpacity = 1;
+                    } else if (currentScrollPosition > this.lastScrollPosition) {
+                        // Scrolling Down
+                        this.isScrollingDown = true;
+                        this.navbarOpacity = Math.max(0, this.navbarOpacity - 0.1); // Gradual fade out
+                    } else {
+                        // Scrolling Up
+                        this.isScrollingDown = false;
+                        this.navbarOpacity = Math.min(1, this.navbarOpacity + 0.1); // Gradual fade in
+                    }
                 }
 
                 this.lastScrollPosition = currentScrollPosition;
+            },
+
+            handleMouseEnter() {
+                // Store the current opacity value before changing it
+                this.previousOpacity = this.navbarOpacity;
+                this.isHovered = true; // Set hover state to true
+                this.navbarOpacity = 1; // Set opacity to 1 on hover
+            },
+
+            handleMouseLeave() {
+                this.isHovered = false; // Set hover state to false
+                // Restore the previous opacity value when the mouse leaves
+                this.navbarOpacity = this.previousOpacity;
             },
             
             getUser() {
@@ -435,7 +462,7 @@
 				axios.get('/notifications/'+this.user.id);
                 this.getNotifications();
                 this.flashMessage = 'All ' + not_no +' Notifications cleared!';
-                this.$emit('flash', this.flashMessage, 'success'); 
+                this.flashShow(this.flashMessage, 'success'); 
 			},
 
             getCatergoriesLoad() {
@@ -452,7 +479,7 @@
 
             update(message) {
                 this.flashMessage = message;
-                this.$emit('flash', this.flashMessage, 'success');
+                this.flashShow(this.flashMessage, 'success');
                 this.reload();
                 // this.getCatergories();
             },
@@ -520,17 +547,101 @@
                 this.getCatergories();
 			},
             
-            deleteCatergory(catergory) {
-                if(confirm('ARE YOU SURE YOU WANT TO DELETE: ' + catergory.name + ' TOGETHER WITH ALL ITS BRANDS AND PRODUCTS' + '?'))
-			   	{
-			   		let name = catergory.name;
-	                axios.delete('/catergory/delete/'+catergory.id)
-	                    .then(response => {
-	                    	this.flashMessage = 'The catergory: ' + name + ' has been deleted!';
-	                    	this.$emit('flash', this.flashMessage, 'danger');
-                            this.getCatergories();
-	                 	});
-			   }
+            async deleteCatergory(category) {
+                let productsNo = '';
+                let brandsNo = '';
+                let products = [];
+                let brands = [];
+                let message = '';
+
+                try {
+                    // Loading message
+                    this.flashShow(`Loading Please Wait...`, 'loading');
+
+                    // Fetch category info
+                    const { data } = await axios.get('/api/catergory/info/' + category.id);
+                    productsNo = data[1];
+                    brandsNo = data[2];
+                    products = data[3];
+                    brands = data[4];
+                    message = `ARE YOU SURE YOU WANT TO DELETE: ${category.name} TOGETHER WITH ALL ITS ${brandsNo} BRANDS AND ${productsNo} PRODUCTS?`;
+                    
+                    this.flashShow(message.toUpperCase(), 'warning');
+
+                    // Confirm deletion
+                    if (confirm(message)) {
+                        // Notify user of ongoing deletion
+                        this.flashHide(0);
+                        this.flashShow(`Deleting Category ${category.name}: Please Wait...`.toUpperCase(), 'loading');
+
+                        // Delete category assets sequentially
+                        await this.deleteBanner(category.id);
+                        await this.deleteProducts(products, category.id);
+                        await this.deleteFinal(category.id);
+                    } else {
+                        this.flashHide(0);
+                        this.flashShow(`Delete Cancelled`.toUpperCase(), 'danger');
+                    }
+                } catch (error) {
+                    // Handle errors and show appropriate flash message
+                    this.flashHide(0);
+                    this.flashShow(`An error occurred: ${error.message}`.toUpperCase(), 'danger');
+                }
+            },
+
+            async deleteBanner(id) {
+                try {
+                    this.flashShow(`Deleting Media: Please Wait...`.toUpperCase(), 'loading');
+
+                    const { data } = await axios.delete('/catergory/media/delete/' + id);
+
+                    this.flashHide(0);
+                    this.flashShow(data[0], data[1]);
+                } catch (error) {
+                    this.flashHide(0);
+                    this.flashShow(`Failed to delete banner: ${error.message}`.toUpperCase(), 'danger');
+                }
+            },
+
+            async deleteProducts(products, id) {
+                this.flashTimed('Deleting Category Products, please wait...', 'loading', 60000);
+
+                try {
+                    for (let [index, product] of products.entries()) {
+                        const remainingProducts = products.length - index - 1;
+                        let productData = `${product.name}`;
+
+                        try {
+                            await axios.delete('/product/delete/' + product.id);
+
+                            this.flashTimed(`${productData} Deleted. (${remainingProducts} products left)`, 'info', 2500);
+                        } catch (error) {
+                            this.flashTimed(`${productData} failed. (${remainingProducts} products left)`, 'danger', 60000);
+                        }
+                    }
+
+                    // Notify user once all products are deleted
+                    this.flashHide(0);
+                    this.flashTimed(`All Products Deleted Successfully.`, 'success', 5000);
+                } catch (error) {
+                    this.flashHide(0);
+                    this.flashShow(`Failed to delete products: ${error.message}`.toUpperCase(), 'danger');
+                }
+            },
+
+            async deleteFinal(id) {
+                try {
+                    this.flashShow(`Deleting Category Please Wait...`.toUpperCase(), 'loading');
+
+                    await axios.delete('/catergory/delete/' + id);
+
+                    this.flashHide(0);
+                    this.flashShow(`Category Deleted Successfully!`.toUpperCase(), 'success');
+                    this.$emit('reload')
+                } catch (error) {
+                    this.flashHide(0);
+                    this.flashShow(`Failed to delete category: ${error.message}`.toUpperCase(), 'danger');
+                }
             },
 
             deleteBrand(brand) {
@@ -539,11 +650,27 @@
                     axios.delete('/brand/delete/' + brand.id)
                         .then(response => {
                             this.flashMessage = 'The brand: ' + name + ' has been deleted!';
-                            this.$emit('flash', this.flashMessage, 'danger');
+                            this.flashShow(this.flashMessage, 'danger');
                             this.getCatergories();
                         });
                 }
-            }
+            },
+
+            flashShow(message, body) {
+                this.$emit('flash', message, body);
+            },
+
+            flashTimed(message, body, duration) {
+                this.$emit('timed', message, body, duration);
+            },
+
+            flashHide(duration) {
+                this.$emit('hide', duration);
+            },
+
+            flashClickShow(message, body, header, url, button, duration) {
+                this.$emit('click', message, body, header, url, button, duration);
+            },
         }
     }
 </script>

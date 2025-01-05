@@ -5,13 +5,8 @@
         <!-- body  -->
         <div v-else>
             <!-- if no products  -->
-            <section v-if="this.products.length == 0">
-                <h2
-                    class="text-[3rem] text-cyan-800 underline decoration-cyan-900 uppercase text-center pt-[10rem] pb-3 font-bold">
-                    NO PRODUCTS ON SALE NOW, PLEASE COME BACK LATER!
-                </h2>
-
-                <hr class="width-hr mx-auto mb-4 border-b-2 border-blueGray-200" />
+            <section v-if="!this.products">
+                <no-products :user="user"></no-products>
 
                 <!-- catergory images    -->
                 <carousel v-if="this.catergories.length > 0" :banners="this.banners" :admin="this.admin"
@@ -22,12 +17,19 @@
 
             <!-- if there are products get product sliders -->
             <section v-else>
+                <!-- catergory images    -->
+                <carousel :banners="this.banners" :admin="this.admin" @edit="editCatergory"
+                    @banner="editBanner" @delete="deleteCatergory"></carousel>
+                <!-- end catergory images    -->
+
+                <hr class="width-hr mx-auto my-2 border-b-2 border-gray-500" />
+
                 <!-- latest arrivals  -->
                 <div>
                     <div class="flex flex-col justify-center">
                         <p class="text-center text-black underline uppercase">Latest Arrivals.</p>
                         <a href="/latest"
-                            class="text-center text-muted underline uppercase text-sm hover:cursor-pointer">see all.</a>
+                            class="text-center text-muted underline uppercase text-sm hover:cursor-pointer">see more.</a>
                     </div>
                     <!-- latest arrivals cards  -->
                     <cardSlider :latestKey="latestKey" :items="this.products" :cards="this.mySwiperCards"
@@ -37,14 +39,7 @@
                 </div>
                 <!-- latest arrivals  -->
 
-                <hr class="width-hr mx-auto mb-2 border-b-2 border-blueGray-200" />
-
-                <!-- catergory images    -->
-                <carousel :banners="this.banners" :admin="this.admin" @edit="editCatergory"
-                    @banner="editBanner" @delete="deleteCatergory"></carousel>
-                <!-- end catergory images    -->
-
-                <hr class="width-hr mx-auto mb-2 border-b-2 border-blueGray-200" />
+                <hr class="width-hr mx-auto my-2 border-b-2 border-gray-500" />
 
                 <!-- catergories and products  -->
                 <div v-for="catergory in catergories">
@@ -55,13 +50,11 @@
                                 <span class="text-center text-black underline">( {{ catergory.in_stock_products.length
                                     }} )</span>
                             </p>
-                            <a :href="'/catergory/'+catergory.id"
-                                class="text-center text-muted underline uppercase text-sm hover:cursor-pointer">see
-                                all.</a>
+                            <a :href="'/catergory/'+catergory.id" class="text-center text-muted underline uppercase text-sm hover:cursor-pointer">see more.</a>
                         </div>
                         <!-- catergory products slider -->
-                        <categoriesSlider :catergory="catergory" :products="updatedProducts(catergory.in_stock_products)" :latestKey="latestKey" :mySwiperCards="this.mySwiperCards" :mySwiperClass="this.mySwiperClass" :user = "this.user" :logged = "this.logged" :admin = "this.admin" @reload="mainReload"/>
-                        <hr class="width-hr mx-auto mb-2 border-b-2 border-blueGray-200" />
+                        <categoriesSlider :catergory="catergory" :products="this.updatedProducts(catergory.in_stock_products)" :latestKey="latestKey" :mySwiperCards="this.mySwiperCards" :mySwiperClass="this.mySwiperClass" :user = "this.user" :logged = "this.logged" :admin = "this.admin" @reload="mainReload"/>
+                        <hr class="width-hr mx-auto my-2 border-b-2 border-gray-500" />
                     </div>
                 </div>
                 <!--end catergories and products  -->
@@ -88,7 +81,7 @@
 </template>
 
 <script>
-    import carousel                                                 from './carousels/bannerCarousel.vue';
+    import carousel                                                 from './carousels/banners/bannerCarousel.vue';
     import cardSlider                                               from './carousels/SliderCarousel.vue';
     import categoriesSlider                                         from './carousels/catergoriesSlider.vue';
 
@@ -247,17 +240,6 @@
                             this.banners           = data[2];
                             this.loaded();
                     });
-            },
-
-            reload() {
-                axios.get('/api/getProducts/')
-                    .then(
-                    	({data}) => {
-                    		this.products       = data[0];
-                            this.stuff          = data[1];
-                            this.loaded();
-                    });
-                    console.log('reloaded');
             },
 
             mainReload(message) {

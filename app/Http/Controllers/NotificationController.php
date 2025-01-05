@@ -28,20 +28,21 @@ class NotificationController extends Controller
 
         // return $userUnreadNotification->data['order_id'];
         $message = $userUnreadNotification->data['message'];
+        $type    = $userUnreadNotification->type;
+        $link    = $userUnreadNotification->data['link'];
 
         if($userUnreadNotification) {
             $userUnreadNotification->markAsRead();
         }
+        // if (Auth::user()->admin == 1) {
+        //     // code...
+        //     $link = '/shipping/admin/'. $userUnreadNotification->notifiable_id;
+        // } else {
+        //     // code...
+        //     $link = '/shipping/'. $userUnreadNotification->notifiable_id;
+        // }
 
-        if (Auth::user()->admin == 1) {
-            // code...
-            $link = '/shipping/admin/'. $userUnreadNotification->notifiable_id;
-        } else {
-            // code...
-            $link = '/shipping/'. $userUnreadNotification->notifiable_id;
-        }
-
-        session()->flash('info', $message);
+        // session()->flash('info', $message);
     
         return redirect($link);
     }
@@ -63,36 +64,6 @@ class NotificationController extends Controller
         }
 
         $link = '/cycle/'. $userUnreadNotification->data['cycle_id'];
-
-        session()->flash('info', $message);
-    
-        return redirect($link);
-    }
-
-    public function markRejectAsRead($id)
-    {
-        $notificationId = request('notification_id');
-
-        $userUnreadNotification = auth()->user()
-                                    ->unreadNotifications
-                                    ->where('id', $id)
-                                    ->first();
-
-        // return $userUnreadNotification->data['order_id'];
-        $message = $userUnreadNotification->data['message'];
-
-        if($userUnreadNotification) {
-            $userUnreadNotification->markAsRead();
-        }
-
-        // get Order
-        $order = Order::find($userUnreadNotification->data['order_id']);
-
-        if (Auth::user()->role == 'admin' || Auth::user()->role == 'employer') {
-            $link = '/orders_unassigned/'. $order->employer_id;
-        } elseif(Auth::user()->role == 'writer') {
-            $link = '/writer_order/'. $userUnreadNotification->data['order_id'];
-        }
 
         session()->flash('info', $message);
     

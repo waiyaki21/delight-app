@@ -15,7 +15,8 @@
                 ( {{ Number(products.length).toLocaleString() }} Products)
             </h2>
             <!-- products grid/card view  -->
-            <productsView :products="products" :show-list="this.showList" :show-btn="this.showBtn" :grid-class="this.gridClass" :logged="logged" @favorites="reloadWithMessage"/>
+            <no-products v-if="!products" :user="user"></no-products>
+            <productsView :products="products" :show-list="this.showList" :show-btn="this.showBtn" :grid-class="this.gridClass" :logged="logged" @favorites="reloadWithMessage" v-else/>
         </div>
     </div>
 

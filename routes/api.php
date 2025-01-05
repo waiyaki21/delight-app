@@ -31,6 +31,9 @@ Route::controller(CatergoryController::class)->middleware('api')->group(function
     // get Catergories with Products info
     Route::get('/getCatergoriesMain','getCatergoriesMain');
 
+    // get Catergories with Products info
+    Route::get('/catergory/info/{catergory}', 'getCatergoryInfo');
+
     // store catergory banner
     Route::post('/catergory/banner/add/{catergory}', 'storeBanner')->name('Post Banner Catergory')->middleware(['admin']);
     

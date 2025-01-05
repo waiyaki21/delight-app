@@ -17,6 +17,7 @@ Route::middleware(['admin'])->controller(CatergoryController::class)->group(func
     Route::delete('/catergory/delete/{catergory}', 'destroy')->name('Delete Catergory');
     Route::post('/catergory/banner/add/{catergory}', 'storeBanner')->name('Post Banner');
     Route::post('/catergory/banner/edit/{catergory}', 'storeBanner')->name('Update Banner');
+    Route::delete('/catergory/media/delete/{catergory}', 'deleteMedia')->name('Delete Catergory Media');
 });
 
 // BrandController routes

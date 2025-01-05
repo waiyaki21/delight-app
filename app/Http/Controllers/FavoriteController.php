@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Favorite;
+use App\Models\User;
 use App\Models\Product;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ProductFavorited;
 
 class FavoriteController extends Controller
 {
@@ -50,6 +52,24 @@ class FavoriteController extends Controller
             $body = 'success';
         }
 
+        $link = '/product_show/'.$product->id;
+        if (!$user->admin) {
+            // Send notification to the user
+            $user->notify(new ProductFavorited($product, $message, $body, $link));
+        } else {
+            // Get all product admins
+            $admins = User::where([
+                            ['admin', 1],
+                            ['id', $product->user_id]
+                        ])
+                        ->get();
+
+            // Send notification to admins
+            foreach ($admins as $admin) {
+                $admin->notify(new ProductFavorited($product, $message, $body, $link));
+            }
+        }
+
         $favorites = Favorite::where('user_id', $user->id)->get();
         return [$message, $favorites, $body];
     }
@@ -72,6 +92,20 @@ class FavoriteController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Product removed from favorites.',
+        ]);
+    }
+
+    public function destroyProducts($product)
+    {
+        $favorites = Favorite::where('product_id', $product)->get();
+
+        foreach ($favorites as $favorite) {
+            $favorite->delete();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product Favorites Deleted.',
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div id="root">
-        <div class="relative bg-gray-50 dark:bg-gray-900 max-h-full">
+        <div class="relative bg-gray-100 dark:bg-gray-900 max-h-full">
             <!-- toast -->
             <toast ref="toastNotificationRef"></toast>
             <!-- navigation menus -->
@@ -11,6 +11,10 @@
                 :catfiles             = "catfiles"
                 ref                   = "mainNavRef"
                 @flash                = "reloadflashShow"
+                @timed                = "flashTimed"
+                @hide                 = "flashHide"
+                @click                = "flashClickShow"
+                @reload               = "reloaduser"
                 @reloadproduct        = "getProducts"
                 @userinfo             = "setUser"
             ></main-nav>
@@ -47,6 +51,10 @@
                 @opencatergory          = "getCatergoryModal"
                 @reloadproduct          = "getProducts"
                 @openproduct            = "showProduct"
+                @flash                  = "flashShow"
+                @click                  = "flashClickShow"
+                @timed                  = "flashTimed"
+                @hide                   = "flashHide"
             ></main-plugin>
             <!-- end plugins -->
 
@@ -130,6 +138,7 @@
 
             reloaduser() {
                 this.$refs.mainNavRef.getUser();
+                this.componentKey += 1;
             },
 
             editCatergory(catergory) {
@@ -147,7 +156,7 @@
             reloadflashShow(message, body) {
                 this.flashShow(message, body);
                 // console.log('main-flash-pkaaaaaah', message, body);
-                this.reloaduser();
+                // this.reloaduser();
             },
 
             // Method to handle the flash message
@@ -155,6 +164,7 @@
                 if (message) {
                     this.$nextTick(() => {
                         if (this.$refs.toastNotificationRef) {
+                            this.flashLoadHide();
                             this.$refs.toastNotificationRef.toastOn([message, body]);
                         }
                     });
@@ -186,6 +196,13 @@
                         this.$refs.toastNotificationRef.allHide();
                     }
                 }, x);
+            },
+
+            // flash Load Hide method
+            flashLoadHide() {
+                if (this.$refs.toastNotificationRef) {
+                    this.$refs.toastNotificationRef.loadHide();
+                }
             }
         }
     }

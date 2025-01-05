@@ -132,59 +132,6 @@ class CatergoryController extends Controller
         return view('home');
     }
 
-    public function deleteBanner($catergory)
-    {
-
-        $banners = CatergoryBanner::where('catergory_id', $catergory)->count();
-
-        if ($banners == 1) {
-            $banner  = CatergoryBanner::where('catergory_id', $catergory)
-                ->first();
-
-            $path = public_path('/catergories/catergory_' . $catergory . '/banner/' . $banner->name);
-
-            File::delete($path);
-
-            $banner->delete();
-        } else {
-            $banners  = CatergoryBanner::where('catergory_id', $catergory)
-                ->get();
-
-            foreach ($banners as $banner) {
-
-                $path = public_path('/catergories/catergory_' . $catergory . '/banner/' . $banner->name);
-
-                File::delete($path);
-
-                $banner->delete();
-            }
-        }
-
-        // get remaining files 
-        $path = public_path('/catergories/catergory_' . $catergory . '/banner/');
-
-        $files = File::files($path);
-
-        foreach ($files as $index => $file) {
-            $name       = $files[$index]->getFilename();
-
-            $newpath = public_path('/catergories/catergory_' . $catergory . '/banner/' . $name);
-
-            File::delete($newpath);
-        }
-    }
-
-    public function deleteFolder($catergory)
-    {
-        $path = public_path('/catergories/catergory_' . $catergory . '/banner/');
-
-        File::delete($path);
-
-        $newpath = public_path('/catergories/catergory_' . $catergory);
-
-        File::delete($newpath);
-    }
-
     public function update(Request $request, Catergory $catergory)
     {
         //get the data and update
@@ -199,32 +146,114 @@ class CatergoryController extends Controller
 
     public function destroy(Catergory $catergory)
     {
-        $brands = Brand::where('catergory_id', $catergory->id)
+        $brands     = Brand::where('catergory_id', $catergory->id)
                         ->get();
 
-        $products = Product::where('catergory_id', $catergory->id)
+        $products   = Product::where('catergory_id', $catergory->id)
                         ->get();
 
-        $catergory = Catergory::where('id', $catergory->id)
+        $catergory  = Catergory::where('id', $catergory->id)
                         ->first();
 
-        $this->deleteBanner($catergory->id);
+        $this->deleteMedia($catergory->id);
+
+        // get Controllers 
+        $productsDelete = new ProductController();
+        $brandsDelete   = new BrandController();
 
         // get product & delete
         foreach ($products as $product) {
-            $file = Product::find($product->id);
-            $file->delete();
+            $productsDelete->destroy($product->id);
         }
         // get brands & delete
         foreach ($brands as $brand) {
-            $file = Brand::find($brand->id);
-            $file->delete();
+            $brandModel = Brand::find($brand->id); // Retrieve the Brand model
+            if ($brandModel) {
+                $brandsDelete->destroy($brandModel);
+            }
         }
         // delete the catergory
         $catergory->delete();
 
         //return json
         return response()->json([null, 200]);
+    }
+
+    public function deleteMedia($catergory)
+    {
+        $folderDirectory = public_path('/catergories/catergory_' . $catergory);
+
+        // Check if the directory exists
+        if (!File::exists($folderDirectory)) {
+            return ['Directory does not exist', 'warning'];
+        } else {
+            $this->deleteBanner($catergory);
+
+            $this->deleteFolder($catergory);
+
+            return ['Catergory Media Deleted Successfully', 'success'];
+        }
+    }
+
+    public function deleteBanner($catergory)
+    {
+        $bannerDirectory = public_path('/catergories/catergory_' . $catergory . '/banner/');
+
+        // Check if the directory exists
+        if (!File::exists($bannerDirectory)) {
+            return ['Directory does not exist', 'warning'];
+        }
+
+        $banners = CatergoryBanner::where('catergory_id', $catergory)->get();
+
+        foreach ($banners as $banner) {
+            $bannerPath = $bannerDirectory . $banner->name;
+
+            // Check if the file exists before attempting to delete it
+            if (File::exists($bannerPath)) {
+                File::delete($bannerPath);
+            }
+
+            $banner->delete();
+        }
+
+        // Get and delete any remaining files in the directory
+        $files = File::files($bannerDirectory);
+
+        foreach ($files as $file) {
+            File::delete($file);
+        }
+
+        // Optionally delete the directory if it's empty
+        if (File::isDirectory($bannerDirectory) && empty(File::files($bannerDirectory))) {
+            File::deleteDirectory($bannerDirectory);
+        }
+
+        return ['Catergory Media deleted successfully', 'danger'];
+    }
+
+    public function deleteFolder($catergory)
+    {
+        $folderDirectory = public_path('/catergories/catergory_' . $catergory);
+
+        // Check if the directory exists
+        if (!File::exists($folderDirectory)) {
+            return ['Directory does not exist', 'warning'];
+        }
+
+        // Get and delete any remaining files in the directory
+        $files = File::files($folderDirectory);
+
+        foreach ($files as $file) {
+            File::delete($file);
+        }
+
+        // Optionally delete the directory if it's empty
+        if (File::isDirectory($folderDirectory) && empty(File::files($folderDirectory))) {
+            File::deleteDirectory($folderDirectory);
+        }
+
+        return ['Catergory Media Folder deleted successfully', 'danger'];
     }
 
     // API CALLS 
@@ -241,11 +270,17 @@ class CatergoryController extends Controller
     {
         $catergories    = Catergory::orderBy('created_at', 'asc')
                                 ->where('name', '!=', 'TVs')
-                                ->with('inStockProducts.brand.catergory:id,name')
+                                ->with([
+                                    'inStockProducts.brand.catergory:id,name',
+                                    'inStockProducts.favorites'
+                                ])
                                 ->get();
 
         $catergoriesTV  = Catergory::where('name', 'TVs')
-                                ->with('inStockProducts.brand.catergory:id,name')
+                                ->with([
+                                    'inStockProducts.brand.catergory:id,name',
+                                    'inStockProducts.favorites'
+                                ])
                                 ->get();
 
         $banners        = CatergoryBanner::with('catergory:id,name')
@@ -274,5 +309,15 @@ class CatergoryController extends Controller
                                 ->first();
 
         return $catergory;
+    }
+
+    public function getCatergoryInfo(Catergory $catergory)
+    {
+        $catergory = Catergory::where('id', $catergory->id)
+                                ->orderBy('created_at', 'asc')
+                                ->withCount(['products','brands'])
+                                ->first();
+
+        return [$catergory, $catergory->products_count, $catergory->brands_count, $catergory->products, $catergory->brands];
     }
 }

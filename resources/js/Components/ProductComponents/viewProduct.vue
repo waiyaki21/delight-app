@@ -22,11 +22,11 @@
         <loading-body
             v-if="isloading == true"
         ></loading-body>
-        <div class="container bg-blueGray-50 dark:bg-gray-900 max-h-full" v-else>
-            <div class="row my-4 py-2">
+        <div class="w-full bg-gray-100 dark:bg-gray-900 max-h-full" v-else>
+            <div class="grid grid-cols-12 m-4 py-2">
                 <!-- product pictures carousel  -->
-                <div class="col-md-5" style="padding-left: 0px;padding-right: 0px;">
-                    <div id="productImage-carousel" class="relative">
+                <div class="col-span-5 p-2" style="padding-left: 0px;padding-right: 0px;">
+                    <div id="productImage-carousel" class="relative border-2 border-black shadow hover:shadow-lg m-2 rounded-md bg-white">
                         <!-- Carousel wrapper -->
                         <swiper
                             :loop="true"
@@ -45,39 +45,39 @@
                         >
                             <swiper-slide v-for="image in images">
                                 <!-- delete image & tooltip -->
-                                <button type="button" class="fixed inline-flex items-center p-1 text-base border border-red-800 hover:border-red-800 font-normal text-center bg-red-800 hover:bg-red-800 rounded dark:bg-transparent dark:hover:bg-transparent mx-4 top-4 left-6 cursor-pointer text-white hover:text-white z-20 shadow" @click="deleteImage(image)" v-if = "this.admin == '1'" :title="'Delete ' + image.name +' ?'">
+                                <button type="button" class="fixed inline-flex items-center p-1 text-base border border-red-800 hover:border-red-800 font-normal text-center bg-red-800 hover:bg-red-800 rounded dark:bg-transparent dark:hover:bg-transparent ml-4 top-4 left-6 cursor-pointer text-white hover:text-white z-20 shadow px-2 py-1" @click="deleteImage(image)" v-if = "this.admin == '1'" :title="'Delete ' + image.name +' ?'">
                                     DELETE IMAGE
-                                    <delete-icon class="h-4 w-4"></delete-icon>
+                                    <delete-icon class="h-4 w-4 ml-2"></delete-icon>
                                 </button>
-                                <img :src="`${image.path}`" :alt="image.name + 'Delight Electronics'" class="img-swipe"/>
+                                <img :src="`${image.path}`" :alt="image.name + 'Delight Electronics'" class="img-swipe bg-white"/>
                             </swiper-slide>
                         </swiper>
                     </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col-span-7">
                     <section class="admin-section" v-if = "this.admin == '1'">
                         <!-- options  -->
                         <div class="inline-flex rounded" role="group">
-                                <button type="button" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-1 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-between" @click="editProduct(product)">
+                                <button type="button" :class="this.actionBtnClass" @click="editProduct(product)">
                                     Edit
                                     <edit-icon class="mx-2 h-4 w-4"></edit-icon>
                                 </button>
-                                <button type="button" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-1 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-between" @click="editProductThumbnail()">
+                                <button type="button" :class="this.actionBtnClass" @click="editProductThumbnail()">
                                     Edit Thumbnail
                                     <camera-icon class="mx-2 h-4 w-4"></camera-icon>
                                 </button>
-                                <button type="button" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-1 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-between" @click="addProductPictures()">
+                                <button type="button" :class="this.actionBtnClass" @click="addProductPictures()">
                                     Add Photos
                                     <photo-icon class="mx-2 h-4 w-4"></photo-icon>
                                 </button>
-                                <button type="button" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-red-800 hover:text-white font-normal text-sm p-1 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-between" @click="deleteProduct(product)">
-                                    Delete
+                                <button type="button" :class="this.actionBtnClass" @click="deleteProduct(product)">
+                                    Delete Product
                                     <delete-icon class="mx-2 h-4 w-4"></delete-icon>
                                 </button>
                         </div>
 
                         <!-- click to copy -->
-                        <blockquote class="w-full p-1 my-1 border-l-4 border-gray-600 hover:border-yellow-200 bg-gray-50 hover:bg-gray-900 dark:border-gray-500 dark:bg-gray-800 inline-flex justify-between rounded-r-md text-gray-900 hover:text-yellow-200 cursor-pointer px-6" title="Click to Copy!" @click="copyUrl">
+                        <blockquote class="w-full p-1 my-1 border-2 border-gray-600 hover:border-yellow-200 bg-gray-50 hover:bg-gray-900 dark:border-gray-500 dark:bg-gray-800 inline-flex justify-between rounded-md text-gray-900 hover:text-yellow-200 cursor-pointer px-4 py-1.5" title="Click to Copy!" @click="copyUrl">
                             <p class="text-xl italic font-medium leading-relaxed">
                                 {{ this.link }}
                             </p>
@@ -104,8 +104,8 @@
                         </p>
                     </p>
                     <!-- not logged in  -->
-                    <div v-if="this.logged == false">
-                        <a class="w-2/3 uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-200 font-medium text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-center" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" @click="showAuthModal()">
+                    <div v-if="!this.logged">
+                        <a :class="this.cartBtn" data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" @click="showAuthModal()">
                             Add to cart.
                             <shopping-icon class="mx-2 h-6 w-6"></shopping-icon>
                         </a>
@@ -115,24 +115,24 @@
                         <!-- quantity counter  -->
                         <div class="inline-flex mx-4" role="group">
                             <button type="button" :class="[this.btnClass, this.minusBtnClass]" @click="minusQuantity()">
-                                <i class="fas fa-minus fa-xs px-1"></i>
+                                <minus-icon class="mx-1 h-5 w-5"></minus-icon>
                             </button>
-                            <button class="inline-flex items-center p-2 text-lg font-medium text-gray-900 bg-transparent border border-gray-500 focus:z-10 cursor-auto">
+                            <button :class="[this.qtyClass]">
                                 {{ Number( this.quantity ).toLocaleString() }}
                             </button>
                             <button type="button" :class="[this.btnClass, this.addBtnClass]" @click="addQuantity(product)">
-                                <i class="fas fa-plus fa-xs px-1"></i>
+                                <plus-icon class="mx-1 h-5 w-5"></plus-icon>
                             </button>
                         </div>
 
                         <!-- add to cart  -->
-                        <a class="w-full uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-200 font-medium text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-center" v-if="product.stock > 0 && this.in_cart == false" @click="addToCart(product)">
+                        <a :class="this.cartBtn" v-if="product.stock > 0 && !this.in_cart" @click="addToCart(product)">
                             Add to cart
                             <shopping-icon class="mx-2 h-6 w-6"></shopping-icon>
                         </a>
 
                         <!-- remove from cart  -->
-                        <a class="w-full uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-200 font-medium text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-center" v-if="product.stock > 0 && this.in_cart == true" @click="removeFromCart(product)">
+                        <a :class="this.cartBtn" v-if="product.stock > 0 && this.in_cart" @click="removeFromCart(product)">
                             Remove from cart
                             <shopping-icon class="mx-2 h-6 w-6"></shopping-icon>
                         </a>
@@ -143,17 +143,17 @@
                             <stop-icon class="mx-2 h-6 w-6"></stop-icon>
                         </a>
                     </div>
-                    <hr class="mb-4">
+                    <hr class="my-4">
                     <!-- add product extra info  -->
-                    <p class="uppercase text-xl text-muted underline mb-2 flex" v-if = "this.admin == '1'">
-                        <span class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-2 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow" @click="showFeatureModal" >
+                    <p class="uppercase text-xl text-muted mb-2 flex" v-if = "this.admin == '1'">
+                        <span :class="this.actionBtnClass" @click="showFeatureModal" >
                             Add Features
-                            <i class="fas fa-plus px-2"></i>
+                            <plus-icon class="mx-2 h-4 w-4"></plus-icon>
                         </span>
-                        <span class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-2 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow" @click="showDescriptionModal">
+                        <span :class="this.actionBtnClass" @click="showDescriptionModal">
                             <!-- v-if = "!description.length" -->
                             Add Description
-                            <i class="fas fa-plus px-2"></i>
+                            <plus-icon class="mx-2 h-4 w-4"></plus-icon>
                         </span>
                     </p>
                     <!-- feature table  -->
@@ -316,11 +316,14 @@
                 openDescriptionModal: false,
 
                 // btn info 
-                btnClass: "mx-1 inline-flex items-center p-1 text-sm font-medium text-gray-900 bg-white border border-gray-500 hover:bg-gray-900 hover:text-white focus:z-10 shadow",
+                btnClass: "mx-1 inline-flex items-center p-1 text-sm font-medium text-gray-900 bg-white border border-gray-500 hover:bg-gray-900 hover:text-white focus:z-10 shadow rounded-md hover:shadow-md",
                 addBtnClass: "",
                 minusBtnClass: "",
 
                 link: '',
+                actionBtnClass: 'text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-1 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-between rounded-md hover:shadow-md',
+                cartBtn: 'w-full uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-200 font-medium text-lg px-4 py-2 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-center rounded-md hover:shadow-md',
+                qtyClass: 'inline-flex items-center p-2 text-lg font-medium text-gray-900 bg-white border border-gray-500 focus:z-10 cursor-auto rounded-md'
             }
         },
 

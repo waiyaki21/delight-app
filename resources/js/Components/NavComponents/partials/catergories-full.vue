@@ -1,6 +1,10 @@
 <template>
     <div class="max-w-screen-xl px-2 mx-auto w-full">
         <div class="text-sm font-medium text-center text-gray-700  border-gray-700 dark:text-gray-400 dark:border-gray-700">
+            <button id="zeroButton" data-dropdown-toggle="zero" class="mx-1 text-black bg-white p-1 border border-black rounded-lg hover:underline hover:shadow font-normal text-sm text-center inline-flex items-center uppercase justify-between mb-2" type="button" @click="showModal" v-if="catergories.length == 0 && admin == '1'">
+                Add Catergories
+                <plus-icon class="w-4 h-4 ml-1"></plus-icon> 
+            </button>
             <ul class="flex flex-row -mb-px overflow-x-auto justify-center nav-xs-hidden " style="overflow: hidden; word-wrap: break-word;">
                 <!-- show in large screens -->
                 <li class="mr-1 nav-xs-hidden" v-for="catergory in catergories">

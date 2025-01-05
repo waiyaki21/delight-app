@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\ProductImageController;
 use App\Models\Favorite;
+use App\Notifications\ProductFavorited;
 
 class ProductController extends Controller
 {
@@ -32,15 +33,8 @@ class ProductController extends Controller
         return view('home');
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {  
-        // dd($request->file('thumbnail'));
-
         // validate the request data
         request()->validate(
             [
@@ -112,7 +106,6 @@ class ProductController extends Controller
 
         // delete thumbs if many 
         $thumbs = ProductThumbnail::where('product_id', $product->id)->count();
-        // return $thumbs;
 
         if ($thumbs > 1) {
             $this->deleteThumbnail($product->id);
@@ -321,7 +314,11 @@ class ProductController extends Controller
 
         // delete images
         $destroy = new ProductImageController();
-        $destroy->deleteImages($product->id); 
+        $destroy->deleteImages($product->id);
+
+        // delete favorites
+        $destroy = new FavoriteController();
+        $destroy->deleteProducts($product->id); 
 
         // delete feature
         foreach ($features as $feature) {
@@ -339,7 +336,7 @@ class ProductController extends Controller
 
         //return json
         return response()->json([null, 200]);
-    }
+    } 
 
     public function productStock(User $user)
     {
@@ -360,7 +357,7 @@ class ProductController extends Controller
         $random     =   Product::where([
                                     ['sold_out', '0'],
                                 ])
-                            ->with('brand','catergory')
+                            ->with('brand', 'catergory', 'favorites')
                             ->inRandomOrder()
                             ->limit(16)
                             ->get();                            

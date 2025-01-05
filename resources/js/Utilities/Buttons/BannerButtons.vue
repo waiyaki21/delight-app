@@ -3,15 +3,11 @@
         <a class="inline-flex items-center justify-between w-full p-1 text-base uppercase cursor-pointer" :class="[
             baseColor,
             `hover:${hoverColor} dark:hover:${darkHoverColor} dark:${darkColor}`,
-        ]" :data-tooltip-target="`${id}-tooltip`" @click="onClick">
+        ]" :data-tooltip-target="this.fullName(id)" @click="onClick">
             <component :is="icon.name" class="md:h-5 md:w-5 h-4 w-4">
             </component>
         </a>
-        <div :id="`${id}-tooltip`" role="tooltip"
-            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700 uppercase">
-            {{ tooltip }}
-            <div class="tooltip-arrow" data-popper-arrow></div>
-        </div>
+        <tooltip :id="this.fullName(id)" :info="tooltip"></tooltip>
     </div>
 </template>
 
@@ -27,5 +23,12 @@ export default {
         darkHoverColor: { type: String, required: true },
         onClick: { type: Function, required: true },
     },
+
+    methods: {
+        fullName(id) {
+            let full = `${id}-tooltip`;
+            return full;
+        }
+    }
 };
 </script>

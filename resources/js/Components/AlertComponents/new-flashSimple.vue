@@ -1,7 +1,7 @@
 <template>
     <section class="fixed top-[4rem] right-5 flex-col z-[141] boldened overflow-y-scroll no-scrollbar max-h-[80%]" ref="flashContainer" v-if="this.show">
         <TransitionGroup name="list" tag="div">
-            <div v-for="flash in flashes" class="my-0.5 dark:bg-gradient-to-r dark:from-gray-800/30 dark:via-gray-800/20 dark:to-gray-800/10 pl-0.5 py-0.5 rounded-l-lg" :key="flash">
+            <div v-for="flash in flashes" class="my-0.5 dark:bg-gradient-to-r dark:from-gray-800/30 dark:via-gray-800/20 dark:to-gray-800/10 pl-0.5 py-0.5 rounded-l-lg flex justify-end" :key="flash">
                 <!-- button flash  -->
                 <div :class="[this.flashButton, flash.class, { 'animate__animated animate__fadeInDown': !flash.isHiding, 'animate__animated animate__zoomOut': flash.isHiding }]" role="alert" v-if="flash.click" @click="hide(flash.id)" @animationend="handleAnimationEnd">
                     <!-- header  -->
@@ -42,7 +42,7 @@
                         v-if    = "flash.icon"
                     ></component>
                     <!-- body  -->
-                    <div :class="['ms-1 md:ms-3 text-lg font-normal boldened pt-1 px-2', flash.text]">
+                    <div :class="[this.textDef, flash.text]">
                         {{ flash.body }}
                     </div>
                     <!-- close  -->
@@ -83,74 +83,75 @@
                 flashes: [],  // Array to store flash messages
                 nextFlashId: 1,
 
+                textDef: 'w-full inline-flex justify-start ms-1 md:ms-3 text-lg font-normal boldened pt-1 px-2',
                 flashButton: 'flex-col gap-1 items-center p-2 py-2 md:py-4 border rounded-md shadow-md cursor-pointer',
-                flashNorm:   'flex items-center p-2 py-3 border-base rounded-md shadow-md cursor-pointer',
+                flashNorm:   'inline-flex justify-between w-[18rem] md:w-[22rem] max-w-sm items-center p-2 py-3 border-base rounded-md shadow-md cursor-pointer',
 
                 classConfig: {
                     success: {
                         icon: 'bellring-icon',
-                        textClass: 'bg-emerald-50 text-emerald-500 focus:ring-emerald-200 dark:bg-emerald-800 dark:text-emerald-200',
-                        classType: 'text-emerald-800 border-emerald-300 bg-emerald-50 dark:text-emerald-200 dark:bg-emerald-800 dark:border-emerald-800',
+                        textClass: 'focus:ring-emerald-200 bg-emerald-800 text-emerald-200',
+                        classType: 'text-emerald-200 bg-emerald-800 border-emerald-800',
                         success: true
                     },
                     info: {
                         icon: 'info-icon',
-                        textClass: 'bg-blue-50 text-blue-500 focus:ring-blue-200 dark:bg-blue-800 dark:text-blue-200',
-                        classType: 'text-blue-800 border-blue-300 bg-blue-50 dark:text-blue-200 dark:bg-blue-800 dark:border-blue-800',
+                        textClass: 'focus:ring-blue-200 bg-blue-800 text-blue-200',
+                        classType: 'text-blue-200 bg-blue-800 border-blue-800',
                         info: true
                     },
-                    sky: {
-                        icon: 'info-icon',
-                        textClass: 'bg-sky-50 text-sky-500 focus:ring-sky-200 dark:bg-sky-800 dark:text-sky-200',
-                        classType: 'text-sky-800 border-sky-300 bg-sky-50 dark:text-sky-200 dark:bg-sky-800 dark:border-sky-800',
+                    media: {
+                        icon: 'photo-icon',
+                        textClass: 'focus:ring-sky-200 bg-sky-800 text-sky-200',
+                        classType: 'text-sky-200 bg-sky-800 border-sky-800',
                         info: true
                     },
                     danger: {
                         icon: 'warning-icon',
-                        textClass: 'bg-rose-50 text-rose-500 focus:ring-rose-200 dark:bg-red-800 dark:text-rose-200',
-                        classType: 'text-red-800 border-red-300 bg-red-50 dark:text-red-200 dark:bg-red-800 dark:border-red-800',
+                        textClass: 'focus:ring-rose-200 bg-red-800 text-rose-200',
+                        classType: 'text-red-200 bg-red-800 border-red-800',
                         danger: true
                     },
                     warm: {
                         icon: 'stop-icon',
-                        textClass: 'bg-orange-50 text-orange-500 focus:ring-orange-200 dark:bg-orange-800 dark:text-orange-200',
-                        classType: 'text-orange-800 border-orange-300 bg-orange-50 dark:text-orange-200 dark:bg-orange-800 dark:border-orange-800',
+                        textClass: 'focus:ring-orange-200 bg-orange-800 text-orange-200',
+                        classType: 'text-orange-200 bg-orange-800 border-orange-800',
                         danger: true
                     },
                     balance: {
                         icon: 'money-icon',
-                        textClass: 'bg-rose-50 text-rose-500 focus:ring-rose-200 dark:bg-red-800 dark:text-rose-200',
-                        classType: 'text-red-800 border-red-300 bg-red-50 dark:text-red-200 dark:bg-red-800 dark:border-red-800',
+                        textClass: 'focus:ring-rose-200 bg-red-800 text-rose-200',
+                        classType: 'text-red-200 bg-red-800 border-red-800',
                         danger: true
                     },
                     reload: {
                         icon: 'clock-icon',
-                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
-                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        textClass: 'focus:ring-yellow-200 bg-transparent text-gray-900',
+                        classType: 'text-gray-900 bg-yellow-400 border-yellow-200',
                         warning: true
                     },
                     warning: {
                         icon: 'newstop-icon',
-                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
-                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        textClass: 'focus:ring-yellow-200 bg-transparent text-gray-900',
+                        classType: 'text-gray-900 bg-yellow-400 border-yellow-200',
                         warning: true
                     },
                     asc: {
                         icon: 'up-arrow',
-                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
-                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        textClass: 'focus:ring-yellow-200 bg-transparent text-gray-900',
+                        classType: 'text-gray-900 bg-yellow-400 border-yellow-200',
                         warning: true
                     },
                     desc: {
                         icon: 'down-arrow',
-                        textClass: 'bg-yellow-50 text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
-                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        textClass: 'focus:ring-yellow-200 bg-transparent text-gray-900',
+                        classType: 'text-gray-900 bg-yellow-400 border-yellow-200',
                         warning: true
                     },
                     loading: {
                         icon: 'loading-icon',
-                        textClass: 'bg-transparent text-yellow-900 focus:ring-yellow-200 dark:bg-transparent dark:text-gray-900',
-                        classType: 'text-yellow-800 border-yellow-300 bg-yellow-50 dark:text-gray-900 dark:bg-yellow-400 dark:border-yellow-200',
+                        textClass: 'focus:ring-yellow-200 bg-transparent text-gray-900',
+                        classType: 'text-gray-900 bg-yellow-400 border-yellow-200',
                         warning: true
                     }
                 },
@@ -206,7 +207,7 @@
                     // Show the flash message for 10 seconds, then remove it
                     setTimeout(() => {
                         this.flashes = this.flashes.filter(flash => flash.id !== newFlash.id);
-                    }, 1000000);
+                    }, 10000);
                 }
             },
 
