@@ -25,4 +25,8 @@ class Brand extends Model
     public function inStockProducts() {
         return $this->hasMany(Product::class, 'brand_id')->orderBy('created_at','desc')->with('brand', 'favorites')->where('sold_out', '0');
     }
+
+    public function models() {
+        return $this->hasMany(ProductModel::class, 'brand_id');
+    }
 }

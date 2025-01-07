@@ -30,7 +30,6 @@
                     :user               = "user"
                     :logged             = "logged"
                     :admin              = "admin"
-                    @flash              = "reloadflashShow"
                     @alert              = "reloadflashShow"
                     @cartinfo           = "updateCart"
                     @reloaduser         = "reloaduser"
@@ -38,6 +37,10 @@
                     @edit               = "editCatergory" 
                     @banner             = "editCatergoryBanner"  
                     @delete             = "deleteCatergory"
+                    @flash              = "reloadflashShow"
+                    @timed              = "flashTimed"
+                    @hide               = "flashHide"
+                    @click              = "flashClickShow"
                 ></router-view>
             </section>
             <!--end body content -->
@@ -104,9 +107,15 @@
             this.getInfo();
         },
 
+        computed: {
+            isProduction() {
+                return process.env.NODE_ENV === 'production';
+            },
+        },
+
         methods: {
             getInfo() {
-                if (this.env == 'production') {
+                if (this.isProduction) {
                     this.url = this.prod_url;
                 } else {
                     this.url = this.dev_url;

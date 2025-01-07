@@ -1,4 +1,6 @@
-
+html {
+  scrollbar-width: thin;
+}
 @font-face {
   font-family: "Sofia Sans Extra Condensed";
   src: url('./assets/fonts/SofiaSansExtraCondensed-VariableFont_wght.ttf');

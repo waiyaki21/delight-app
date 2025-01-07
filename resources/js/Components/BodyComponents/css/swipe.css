@@ -15,17 +15,17 @@
     justify-content: center;
     color: black;
     border-width: 2px;
-    border-color: black;
-    border-radius: 10%;
-    padding: 10px;
-    background-color: white;
+    border-color: rgb(0, 0, 0);
+    border-radius: 25%;
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
     font-weight: bold;
 }
 .swiper-button-next:hover,
 .swiper-button-prev:hover{
-    background-color: black;
-    border-color: white;
-    color: white;
+    background-color: rgb(211, 236, 236);
+    border-color: black;
+    color: black;
     box-shadow:3px 3px 3px 0 rgba(0,0,0,.21);-webkit-box-shadow:3px 3px 3px 0 rgba(0,0,0,.21);-moz-box-shadow:3px 3px 3px 0 rgba(0,0,0,.21)
 }
 .swiper-button-next.swiper-button-disabled,
@@ -79,17 +79,17 @@
 
 /* stuff  */
 .swiper-pagination-bullet {
-    width:15px;
-    height: 15px;
+    width:7px;
+    height: 7px;
     display: inline-block;
     border-radius: 50%;
-    border-color: teal;
+    border-color: black;
     border-width: 2px;
-    background: var(--swiper-pagination-bullet-inactive-color, #000);
+    background: rgb(211, 236, 236);
     opacity:  1;
 }
 button.swiper-pagination-bullet {
-    border: 10px;
+    border: 7px;
     border-color: black;
     margin: 0;
     padding: 0;
@@ -105,11 +105,11 @@ button.swiper-pagination-bullet {
 }
 .swiper-pagination-bullet-active {
     width:80px;
-    height: 15px;
+    height: 7px;
     display: inline-block;
     border-radius: 7px;
     opacity:  1;
-    background: teal;
+    background: rgb(211, 236, 236);
     border: -2px;
     border-color: black;
 }

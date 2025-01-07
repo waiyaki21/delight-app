@@ -6,10 +6,9 @@
                     <button :class="[this.tabClass, this.productBtn]" id="product-tab" data-tabs-target="#product" type="button" aria-controls="product" @click="showProductDetails">1. Product Details</button>
                 </li>
                 <li class="mr-2" role="presentation">
-                    <button :class="[this.tabClass ,this.disabledBtn, this.featuresBtn]" data-tooltip-target="featuresDetailsTooltip" type="button" @click="showFeaturesDetails" :disabled="this.disabled">
+                    <button :class="[this.tabClass ,this.disabledBtn, this.featuresBtn]"  type="button" @click="showFeaturesDetails" :disabled="this.disabled" v-tooltip="$tooltip(this.disabled ? 'Fill in all details within Page 1': 'Enter Product Features', 'top')">
                         2. Product Features
                     </button>
-                    <tooltip :id="'featuresDetailsTooltip'" :info="this.disabled ? 'Fill in all details within Page 1': 'Enter Product Features'"></tooltip>
                 </li>
             </ul>
         </div>
@@ -88,6 +87,17 @@
                                 <i v-if="errors?.stock || formsuccess" :class="formFailed.iconreloadclass"></i>
                             </label>
                             <input type="text" id="stock" name="stock" v-model="fields.stock" :class="[formInfo.inputclass]" placeholder="Enter Product Stock Amnt" @keydown.enter="focusNext" @input="checkValue('stock')">
+                        </div>
+
+                        <!-- product stock  -->
+                        <div class="col-span-6 mt-2">
+                            <label 
+                                for="info" 
+                                :class="errors && errors.info ? formFailed.labelErrorclass : formInfo.labelclass">
+                                Product Info 
+                                <i v-if="errors?.info || formsuccess" :class="formFailed.iconreloadclass"></i>
+                            </label>
+                            <input type="text" id="info" name="info" v-model="fields.info" :class="[formInfo.inputclass]" placeholder="Enter Product Info" @keydown.enter="focusNext" @input="checkValue('info')">
                         </div>
 
                         <!-- thumbnail file -->
@@ -275,11 +285,11 @@
                 // If there are no errors, set modalInfo and formInfo
                 if (!this.hasErrors && this.submitted) {
                     if (!this.cleared) {
-                        this.$emit('success', 'All fee errors cleared!', 'info')
+                        this.flashShow('All Errors cleared!', 'info')
                         this.cleared = true;
                     }
                     // this.modalInfo = modalUtilities.info(this);
-                    this.formInfo  = utilities.info(this);
+                    this.formInfo  = utilities.loaded(this);
                 }
             },
 
@@ -512,6 +522,7 @@
                 this.fields.brand_id            = "";
                 this.fields.name                = "";
                 this.fields.stock               = "";
+                this.fields.info                = "";
                 this.fields.price               = "";
                 this.fieldsFeatures.header      = "";
                 this.fieldsFeatures.body        = "";

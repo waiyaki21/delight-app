@@ -1,5 +1,5 @@
 <template>
-    <button :class="[setClass(buttonClass), buttonClass == 'light' ? 'text-gray-900' : 'dark:text-gray-900 text-white']" @click="handleClick">
+    <button :class="[setClass(buttonClass), buttonClass == 'light' ? 'text-gray-900' : 'dark:text-gray-900 text-white']" v-tooltip="$tooltip(tooltipText, 'top')" @click="handleClick">
         <span :class="[spanClass]">
             {{ buttonText }}
         </span>

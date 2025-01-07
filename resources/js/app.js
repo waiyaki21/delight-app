@@ -2,7 +2,11 @@ require('./bootstrap');
 
 import { createApp }    from 'vue';
 import router           from './routes';
-// import { Dial }         from "flowbite";
+import VueViewer        from 'v-viewer';
+import 'viewerjs/dist/viewer.css';
+
+import FloatingVue from 'floating-vue';
+import 'floating-vue/dist/style.css';
 
 // Main Body
 import appBody          from './Pages/MainApp.vue'
@@ -32,7 +36,7 @@ import footerBody       from './Components/BodyComponents/FooterBody.vue'
 import toast            from './Components/AlertComponents/new-flashSimple.vue'
 
 // import icons 
-import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon, BellAlertIcon, ExclamationTriangleIcon, ClockIcon, CurrencyDollarIcon, CheckCircleIcon,BellSnoozeIcon,ArrowPathIcon, MinusIcon
+import { PencilSquareIcon, TrashIcon, ShoppingCartIcon, StopCircleIcon, PhotoIcon, CameraIcon, MagnifyingGlassIcon, Bars3Icon, PlusIcon, PhoneIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon , NoSymbolIcon, TruckIcon, ShoppingBagIcon, DevicePhoneMobileIcon, PuzzlePieceIcon, SparklesIcon, ListBulletIcon, Square2StackIcon, XMarkIcon, FunnelIcon, HandThumbUpIcon, BellIcon, HomeModernIcon, DocumentDuplicateIcon, UserCircleIcon, HeartIcon, BellAlertIcon, ExclamationTriangleIcon, ClockIcon, CurrencyDollarIcon, CheckCircleIcon,BellSnoozeIcon,ArrowPathIcon, MinusIcon, CheckIcon, ShareIcon
  }   from '@heroicons/vue/24/outline';
 
 // Utilities 
@@ -44,6 +48,7 @@ import Tooltip          from './Utilities/Tooltips/tooltip.vue';
 
 import actionButton     from './Utilities/Buttons/actionButton.vue';
 import styleButton      from './Utilities/Buttons/styleButton.vue';
+import globalMixin      from './Globals/globalMixin';
 const app = createApp({})
 app
         .component('main-body',     appBody)
@@ -60,6 +65,7 @@ app
         .component('flash-message',   toast)
 
         // icon components 
+        .component('share-icon',        ShareIcon)
         .component('edit-icon',         PencilSquareIcon)
         .component('delete-icon',       TrashIcon)
         .component('shopping-icon',     ShoppingCartIcon)
@@ -99,6 +105,7 @@ app
         .component('clock-icon',        ClockIcon)
         .component('money-icon',        CurrencyDollarIcon)
         .component('checkcircle-icon',  CheckCircleIcon)
+        .component('check-icon',        CheckIcon)
         .component('snooze-icon',       BellSnoozeIcon)
         .component('star-icon',         SparklesIcon)
         .component('loading-icon',      ArrowPathIcon)
@@ -114,4 +121,22 @@ app
         .component('StyleButton',       styleButton)
 
         .use(router)
+        .use(FloatingVue)
+        .use(VueViewer, {
+                defaultOptions: {
+                        toolbar: true,
+                        navbar: true,
+                        title: true,
+                        button: false,
+                        tooltip: true,
+                        movable: false,
+                        zoomable: true,
+                        rotatable: false,
+                        scalable: true,
+                        transition: true,
+                        fullscreen: true,
+                        keyboard: true
+                },
+        })
+        .use(globalMixin)
         .mount('#app');

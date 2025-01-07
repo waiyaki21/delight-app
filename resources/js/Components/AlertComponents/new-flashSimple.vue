@@ -47,7 +47,7 @@
                     </div>
                     <!-- close  -->
                     <button type="button"
-                        :class="['ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 inline-flex items-center justify-center w-5 h-5 md:w-8 md:h-8',flash.text]"
+                        :class="[this.closeBtn,flash.text]"
                         @click="hide(flash.id)">
                         <svg class="w-3 h-3" aria-hidden="true" fill="none" viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -87,6 +87,8 @@
                 flashButton: 'flex-col gap-1 items-center p-2 py-2 md:py-4 border rounded-md shadow-md cursor-pointer',
                 flashNorm:   'inline-flex justify-between w-[18rem] md:w-[22rem] max-w-sm items-center p-2 py-3 border-base rounded-md shadow-md cursor-pointer',
 
+                closeBtn: 'ms-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex items-center justify-center w-5 h-5 md:w-8 md:h-8',
+
                 classConfig: {
                     success: {
                         icon: 'bellring-icon',
@@ -104,6 +106,12 @@
                         icon: 'photo-icon',
                         textClass: 'focus:ring-sky-200 bg-sky-800 text-sky-200',
                         classType: 'text-sky-200 bg-sky-800 border-sky-800',
+                        info: true
+                    },
+                    cart: {
+                        icon: 'shopping-icon',
+                        textClass: 'focus:ring-cyan-200 bg-cyan-800 text-cyan-200',
+                        classType: 'text-cyan-200 bg-cyan-800 border-cyan-800',
                         info: true
                     },
                     danger: {

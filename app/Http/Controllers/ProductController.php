@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\ProductImageController;
 use App\Models\Favorite;
+use App\Models\ProductModel;
 use App\Notifications\ProductFavorited;
 
 class ProductController extends Controller
@@ -43,6 +44,7 @@ class ProductController extends Controller
                 'brand_id'           => 'required',
                 'price'              => 'required',
                 'stock'              => 'required',
+                'info'               => 'required',
                 'thumbnail'          => 'required|max:100000',
                 'files'              => 'required|max:100000'
             ],
@@ -52,6 +54,7 @@ class ProductController extends Controller
                 'brand_id.required'     => 'Product Brand is required',
                 'price.required'        => 'Product Price is required',
                 'stock.required'        => 'Product Stock is required',
+                'info.required'         => 'Product Info is required',
                 'thumbnail.required'    => 'Product Thumbnail Image is required',
                 'files.required'        => 'Product Files image is required'
             ]
@@ -69,6 +72,7 @@ class ProductController extends Controller
                 'name'                      => $request->name,
                 'price'                     => $request->price,
                 'stock'                     => $request->stock,
+                'info'                      => $request->info,
         ]);
 
         // get the product record
@@ -376,27 +380,30 @@ class ProductController extends Controller
 
     public function getProduct(Product $product)
     {
-        $product = Product::where('id',$product->id)
+        $product        = Product::where('id',$product->id)
                             ->with('thumbnail','cartitems')
                             ->first();
 
-        $brand = Brand::where('id', $product->brand_id)
-                        ->first();
+        $brand          = Brand::where('id', $product->brand_id)
+                            ->first();
 
-        $images = ProductImage::where('product_id', $product->id)
-                        ->orderBy('created_at', 'desc')
-                        ->get(); 
+        $images         = ProductImage::where('product_id', $product->id)
+                            ->orderBy('created_at', 'desc')
+                            ->get(); 
                         
-        $catergory = Catergory::where('id', $product->catergory_id)
-                        ->first();
+        $catergory      = Catergory::where('id', $product->catergory_id)
+                            ->first();
 
-        $features = ProductFeature::where('product_id', $product->id)
-                        ->get();
+        $features       = ProductFeature::where('product_id', $product->id)
+                            ->get();
 
-        $description = ProductDescription::where('product_id', $product->id)
-                        ->get();
+        $description    = ProductDescription::where('product_id', $product->id)
+                            ->get();
 
-        return [$product, $brand, $images, $catergory, $features, $description];
+        $models         = ProductModel::where('product_id', $product->id)
+                            ->get();
+
+        return [$product, $brand, $images, $catergory, $features, $description, $models];
     }
 
     public function getStock()

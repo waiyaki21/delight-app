@@ -33,16 +33,18 @@
     "dependencies": {
         "@chenfengyuan/vue-countdown": "^2.1.0",
         "@heroicons/vue": "^2.0.14",
+        "@tiptap/extension-image": "^2.11.0",
         "@tiptap/extension-underline": "^2.0.0-beta.213",
         "@tiptap/pm": "^2.0.0-beta.213",
         "@tiptap/starter-kit": "^2.0.0-beta.213",
         "@tiptap/vue-3": "^2.0.0-beta.213",
+        "floating-vue": "^5.2.2",
         "laravel-vue-pagination": "^4.0.0",
         "moment": "^2.29.4",
         "perfect-scrollbar": "^1.5.5",
         "remixicon": "^2.5.0",
         "swiper": "^8.4.5",
-        "vue-advanced-cropper": "^1.11.5",
+        "v-viewer": "^3.0.21",
         "vue-simple-range-slider": "^1.0.0"
     }
 }

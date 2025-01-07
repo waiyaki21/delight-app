@@ -65,7 +65,7 @@
                 <div :class="[this.notificationClass]" @mouseleave="showNotification">
                     <ul class="py-1" aria-labelledby="nofity-button">
                         <li v-for="notification in notifications">
-                            <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap bg-white text-black px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" :href="'/notification/'+notification.id" v-if = "user.admin == '1'">
+                            <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap bg-white text-black px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" :href="'/notification/'+notification.id" v-if = "admin">
                                 <div class="flex py-1 px-1">
                                     <div class="flex flex-col justify-center">
                                         <h6 class="mb-1 font-normal leading-normal text-sm">
@@ -209,7 +209,7 @@
     <!-- navigation modals -->
     <!-- add catergory modal  -->
     <catergoryModal
-        v-if            = "user.admin == '1'"
+        v-if            = "admin"
         @closemodal     = "showModal"
         @completed      = "update"
         ref 			= "catergoryRef" 
@@ -217,7 +217,7 @@
 
     <!-- edit catergory modal  -->
     <catergoryEditModal
-        v-if            = "user.admin == '1'"
+        v-if            = "admin"
         v-bind:catergory= "modalData"
         v-bind:banner   = "bannerShow"
         v-show          = "openEditModal"
@@ -228,7 +228,7 @@
 
     <!-- edit brand modal  -->
     <brandEditModal
-        v-if            = "user.admin == '1'"
+        v-if            = "admin"
         v-bind:brand    = "modalData"
         v-show          = "openBrandEditModal"
         @closemodal     = "closeEditBrand"
@@ -237,8 +237,8 @@
     ></brandEditModal>
 
     <!-- add product modal  -->
-    <productModal
-        v-if                = "user.admin == '1'"
+    <productModal 
+        v-if                = "admin"
         v-show              = "openProductModal"
         v-bind:catfiles     = "catfiles"
         @closemodal         = "showProduct"

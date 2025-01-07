@@ -8,5 +8,6 @@
 @import './app.css';
 @import './screen.css';
 @import './assets/slider.css';
-@import '/resources/js/Components/BodyComponents/css/swipe.css';
 @import './assets/animate.css';
+/* swiper pagination and navigation css  */
+@import '/resources/js/Components/BodyComponents/css/swipe.css';

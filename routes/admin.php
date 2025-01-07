@@ -8,6 +8,7 @@ use App\Http\Controllers\CatergoryController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProductFeatureController;
 use App\Http\Controllers\ProductDescriptionController;
+use App\Http\Controllers\ProductModelController;
 
 // Routes requiring 'admin' middleware
 // CatergoryController routes
@@ -50,6 +51,12 @@ Route::middleware(['admin'])->controller(ProductFeatureController::class)->group
 Route::middleware(['admin'])->controller(ProductDescriptionController::class)->group(function () {
     Route::post('/product/description/add/{product}', 'store')->name('Post Product Description');
     Route::delete('/description/delete/{productDescription}', 'destroy')->name('Delete Product Description');
+});
+
+// ProductModelController routes
+Route::middleware(['admin'])->controller(ProductModelController::class)->group(function () {
+    Route::post('/product/model/add/{product}', 'store')->name('Post Product Model');
+    Route::delete('/model/delete/{productModel}', 'destroy')->name('Delete Product Model');
 });
 
 // ProductImageController routes

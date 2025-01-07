@@ -23,54 +23,33 @@
             v-if="isloading == true"
         ></loading-body>
         <div class="w-full bg-gray-100 dark:bg-gray-900 max-h-full" v-else>
-            <div class="grid grid-cols-12 m-4 py-2">
+            <div class="grid grid-cols-1 md:grid-cols-12 m-4 py-2">
                 <!-- product pictures carousel  -->
-                <div class="col-span-5 p-2" style="padding-left: 0px;padding-right: 0px;">
-                    <div id="productImage-carousel" class="relative border-2 border-black shadow hover:shadow-lg m-2 rounded-md bg-white">
-                        <!-- Carousel wrapper -->
-                        <swiper
-                            :loop="true"
-                            :spaceBetween="30"
-                            :effect="'fade'"
-                            :navigation="true"
-                            :autoplay="{
-                                delay: 4500,
-                                disableOnInteraction: false,
-                            }"
-                            :pagination="{
-                                clickable: true,
-                            }"
-                            :modules="modules"
-                            class="mySwiper"
-                        >
-                            <swiper-slide v-for="image in images">
-                                <!-- delete image & tooltip -->
-                                <button type="button" class="fixed inline-flex items-center p-1 text-base border border-red-800 hover:border-red-800 font-normal text-center bg-red-800 hover:bg-red-800 rounded dark:bg-transparent dark:hover:bg-transparent ml-4 top-4 left-6 cursor-pointer text-white hover:text-white z-20 shadow px-2 py-1" @click="deleteImage(image)" v-if = "this.admin == '1'" :title="'Delete ' + image.name +' ?'">
-                                    DELETE IMAGE
-                                    <delete-icon class="h-4 w-4 ml-2"></delete-icon>
-                                </button>
-                                <img :src="`${image.path}`" :alt="image.name + 'Delight Electronics'" class="img-swipe bg-white"/>
-                            </swiper-slide>
-                        </swiper>
-                    </div>
-                </div>
-                <div class="col-span-7">
-                    <section class="admin-section" v-if = "this.admin == '1'">
+                <productCarousel
+                    :images="images"
+                    :modules="modules"
+                    :admin="admin"
+                    @delete-image="deleteImage"
+                />
+
+                <!-- product pictures info  -->
+                <div class="col-span-1 md:col-span-7">
+                    <section class="admin-section flex-col" v-if = "this.admin">
                         <!-- options  -->
-                        <div class="inline-flex rounded" role="group">
-                                <button type="button" :class="this.actionBtnClass" @click="editProduct(product)">
+                        <div class="grid grid-cols-2 md:grid-cols-4 rounded" role="group">
+                                <button type="button" :class="this.actionBtnClass, 'col-span-1'" @click="editProduct(product)">
                                     Edit
                                     <edit-icon class="mx-2 h-4 w-4"></edit-icon>
                                 </button>
-                                <button type="button" :class="this.actionBtnClass" @click="editProductThumbnail()">
+                                <button type="button" :class="this.actionBtnClass, 'col-span-1'" @click="editProductThumbnail()">
                                     Edit Thumbnail
                                     <camera-icon class="mx-2 h-4 w-4"></camera-icon>
                                 </button>
-                                <button type="button" :class="this.actionBtnClass" @click="addProductPictures()">
+                                <button type="button" :class="this.actionBtnClass, 'col-span-1'" @click="addProductPictures()">
                                     Add Photos
                                     <photo-icon class="mx-2 h-4 w-4"></photo-icon>
                                 </button>
-                                <button type="button" :class="this.actionBtnClass" @click="deleteProduct(product)">
+                                <button type="button" :class="this.actionBtnClass, 'col-span-1'" @click="deleteProduct(product)">
                                     Delete Product
                                     <delete-icon class="mx-2 h-4 w-4"></delete-icon>
                                 </button>
@@ -78,28 +57,39 @@
 
                         <!-- click to copy -->
                         <blockquote class="w-full p-1 my-1 border-2 border-gray-600 hover:border-yellow-200 bg-gray-50 hover:bg-gray-900 dark:border-gray-500 dark:bg-gray-800 inline-flex justify-between rounded-md text-gray-900 hover:text-yellow-200 cursor-pointer px-4 py-1.5" title="Click to Copy!" @click="copyUrl">
-                            <p class="text-xl italic font-medium leading-relaxed">
+                            <p class="text-base hover:italic font-normal leading-relaxed">
                                 {{ this.link }}
                             </p>
                             <a class="cursor-pointer" title="Click to Copy!" @click="copyUrl">
-                                <copy-icon class="h-8 w-8"></copy-icon>
+                                <share-icon class="h-6 w-6"></share-icon>
                             </a>
                         </blockquote>
                     </section>
                     <!-- product information  -->
                     <p class="uppercase text-xl text-muted">{{ brand.name }}</p>
                     <p class="uppercase text-4xl">{{ product.name }}</p>
-                    <p class="uppercase text-4xl mt-4 text-gray-500">ksh {{ Number(product.price).toLocaleString() }}.00</p>
-                    <hr class="mb-4">
+                    <p class="uppercase text-4xl mt-2 text-gray-500">ksh {{ Number(product.price).toLocaleString() }}.00</p>
+                    <p class="text-lg my-1 text-gray-900">{{ product.info }}</p>
+                    <hr class="my-2">
+                    <!-- product models  -->
+                    <div class="w-full inline-flex mb-2">
+                        <span v-for="model in models" :class="[model.is_selected ? selectedBtnClass : actionBtnClass, 'inline-flex justify-center space-x px-2 py-0.5']" @click="selectModel(model)">
+                            <span class="font-normal text-base px-2">{{ model.name }}.</span>
+                            <div :class="['divider px-1 h-[50%] my-auto', model.is_selected ? 'group-hover:text-gray-900 text-white' : 'text-gray-900 group-hover:text-white']" v-if = "this.admin"></div>
+                            <a class="text-center uppercase text-red-600 font-normal text-base my-auto cursor-pointer px-1" @click.stop="deleteModel(model)" v-if = "this.admin" v-tooltip="$tooltip(`Delete Products Models`, 'top')">
+                                <delete-icon class="h-4 w-4"></delete-icon>
+                            </a>
+                        </span>
+                    </div>
                     <!-- amnt in and left  -->
                     <p class="uppercase text-sm text-danger inline-flex">
-                        <p class="uppercase text-sm text-success px-1">
-                            <i class="fas fa-check px-1"></i>
+                        <p class="uppercase text-sm text-success px-1 inline-flex gap-1">
+                            <check-icon class="h-4 w-4"></check-icon>
                             {{ product.stock }} In Stock.
                         </p>
                         <div class="divider h-6"></div>
-                        <p class="uppercase text-sm text-danger">
-                            <i class="fas fa-clock px-1"></i>
+                        <p class="uppercase text-sm text-danger inline-flex gap-1">
+                            <clock-icon class="h-4 w-4"></clock-icon>
                             {{ product.stock - this.quantity }} <span class="pl-1"> Left.</span>
                         </p>
                     </p>
@@ -126,26 +116,26 @@
                         </div>
 
                         <!-- add to cart  -->
-                        <a :class="this.cartBtn" v-if="product.stock > 0 && !this.in_cart" @click="addToCart(product)">
+                        <a :class="[this.cartBtn, this.cartActive ? 'cursor-pointer' : 'cursor-not-allowed']" v-if="this.in_stock && !this.in_cart" @click="addToCart(product)">
                             Add to cart
                             <shopping-icon class="mx-2 h-6 w-6"></shopping-icon>
                         </a>
 
                         <!-- remove from cart  -->
-                        <a :class="this.cartBtn" v-if="product.stock > 0 && this.in_cart" @click="removeFromCart(product)">
+                        <a :class="this.cartBtn" v-if="this.in_stock && this.in_cart" @click="removeFromCart(product)">
                             Remove from cart
                             <shopping-icon class="mx-2 h-6 w-6"></shopping-icon>
                         </a>
 
                         <!-- Out of stock  -->
-                        <a class="w-full uppercase text-gray-900 bg-red-600 border border-red-600 hover:bg-red-600 hover:text-black font-medium text-lg px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-center" v-if="product.stock <= 0">
+                        <a :class="this.stockOutBtn" v-if="!this.in_stock">
                             Out of Stock
                             <stop-icon class="mx-2 h-6 w-6"></stop-icon>
                         </a>
                     </div>
-                    <hr class="my-4">
+                    <hr class="my-2">
                     <!-- add product extra info  -->
-                    <p class="uppercase text-xl text-muted mb-2 flex" v-if = "this.admin == '1'">
+                    <p class="uppercase text-xl text-muted mb-2 flex" v-if = "this.admin">
                         <span :class="this.actionBtnClass" @click="showFeatureModal" >
                             Add Features
                             <plus-icon class="mx-2 h-4 w-4"></plus-icon>
@@ -153,6 +143,11 @@
                         <span :class="this.actionBtnClass" @click="showDescriptionModal">
                             <!-- v-if = "!description.length" -->
                             Add Description
+                            <plus-icon class="mx-2 h-4 w-4"></plus-icon>
+                        </span>
+                        <span :class="this.actionBtnClass" @click="showModelModal">
+                            <!-- v-if = "!description.length" -->
+                            Add Model Types
                             <plus-icon class="mx-2 h-4 w-4"></plus-icon>
                         </span>
                     </p>
@@ -170,9 +165,9 @@
                                     <td class="p-1 uppercase">
                                         {{ feature.body }}
                                     </td>
-                                    <td class="p-1 uppercase" v-if = "this.admin == '1'">
+                                    <td class="p-1 uppercase" v-if = "this.admin">
                                         <div class="inline-flex rounded" role="group">
-                                            <button type="button" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-red-800 hover:text-white font-normal text-sm p-1 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-between" @click="deleteFeature(feature)">
+                                            <button type="button" class="text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-red-800 hover:text-white font-normal text-sm p-1 ml-2  cursor-pointer shadow inline-flex justify-between" @click="deleteFeature(feature)">
                                                 Delete
                                                 <delete-icon class="mx-2 h-4 w-4"></delete-icon>
                                             </button>
@@ -190,7 +185,7 @@
                         <div v-for="desc in description" class="my-1 border-b border-gray-200">
                             <p class="text-gray-800 text-xl uppercase underline mb-2 inline-flex justify-between"> 
                                 {{ desc.header }}. 
-                                <div class=" inline-flex mx-2" v-if = "this.admin == '1'"> 
+                                <div class=" inline-flex mx-2" v-if = "this.admin"> 
                                     <a class="text-center uppercase text-blue-600 font-normal text-base p-1 py-2 cursor-pointer" @click="editDesc(desc)">
                                         <edit-icon class="h-4 w-4"></edit-icon>
                                     </a>
@@ -212,6 +207,7 @@
             v-bind:product      = "product"
             @closemodal         = "showFeatureModal"
             @reloadfeature      = "getProduct"
+            @flash              = "flashShow"
             ref 			    = "featureRef" 
         ></featureModal>
 
@@ -221,8 +217,27 @@
             v-bind:product      = "product"
             @closemodal         = "showDescriptionModal"
             @reloaddescription  = "getProduct"
+            @flash              = "flashShow"
             ref 			    = "descriptionRef" 
         ></descriptionModal>
+
+        <!-- add model modal  -->
+        <modelModal
+            v-show              = "openModelModal"
+            v-bind:product      = "product"
+            @closemodal         = "showModelModal"
+            @reloadmodel        = "getProduct"
+            @flash              = "flashShow"
+            ref 			    = "modelRef" 
+        ></modelModal>
+
+        <!-- edit description modal  -->
+        <!-- <editDescriptionModal
+            v-show              = "openEditDescriptionModal"
+            @closemodal         = "showEditDescriptionModal"
+            @reloaddescription  = "getProduct"
+            ref 			    = "editDescriptionRef" 
+        ></editDescriptionModal> -->
 
         <!-- edit product modal  -->
         <editProductModal
@@ -234,6 +249,7 @@
             @closemodal         = "editProduct"
             @reloadproduct      = "reload"
             @reloadImages       = "getImages"
+            @flash              = "flashShow"
             ref 			    = "editProductRef" 
         ></editProductModal>
 
@@ -243,6 +259,7 @@
             v-bind:product      = "product"
             @reloaduser         = "reloadUser"
             @closemodal         = "showAuthModal"
+            @flash              = "flashShow"
             ref 			    = "authRef" 
         ></authModal>  
     </div>
@@ -255,27 +272,17 @@
 <script>
     import featureModal           from '../modalComponents/featureModals/feature-modal.vue';
     import descriptionModal       from '../modalComponents/descriptionModals/description-modal.vue';
+    import modelModal             from '../modalComponents/modelModals/model-modal.vue';
+    // import editDescriptionModal   from '../modalComponents/descriptionModals/editDescription-modal.vue';
     import editProductModal       from '../modalComponents/productModals/editProduct-modal.vue';
     import authModal 	          from '../ModalComponents/authModals/auth-modal.vue';
     import flash                  from '../AlertComponents/flash-simple.vue';
     import cartflash              from '../AlertComponents/flash-cart.vue';
-    
-
-    // Import Swiper Vue.js components
-    import { Swiper, SwiperSlide } from 'swiper/vue';
-
-    import "swiper/css/effect-fade";
-    import "swiper/css/controller";
-    
-    import { EffectFade, Navigation, Controller, Pagination, Autoplay } from "swiper";
-
-    // Import Swiper styles
-    import 'swiper/css';
-    import '../BodyComponents/css/swipe.css';
+    import productCarousel        from './carousel/productCarousel.vue';
 
     export default {
         props: [
-            'url'
+            'url',
         ],
 
         data() {
@@ -298,6 +305,7 @@
                 number:         '',
                 description:    [],
                 in_cart:        false,
+                in_stock:       false,
                 //  cart check item
                 dup_items      : false,
                 dup_count      : '',
@@ -314,6 +322,8 @@
                 openEditModal: false,
                 openAuthModal: false,
                 openDescriptionModal: false,
+                openEditDescriptionModal: false,
+                openModelModal: false,
 
                 // btn info 
                 btnClass: "mx-1 inline-flex items-center p-1 text-sm font-medium text-gray-900 bg-white border border-gray-500 hover:bg-gray-900 hover:text-white focus:z-10 shadow rounded-md hover:shadow-md",
@@ -321,9 +331,14 @@
                 minusBtnClass: "",
 
                 link: '',
-                actionBtnClass: 'text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-1 ml-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-between rounded-md hover:shadow-md',
-                cartBtn: 'w-full uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-200 font-medium text-lg px-4 py-2 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 cursor-pointer shadow inline-flex justify-center rounded-md hover:shadow-md',
-                qtyClass: 'inline-flex items-center p-2 text-lg font-medium text-gray-900 bg-white border border-gray-500 focus:z-10 cursor-auto rounded-md'
+                actionBtnClass: 'group text-center uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white font-normal text-sm p-1 ml-2  cursor-pointer shadow inline-flex justify-between rounded-md hover:shadow-md',
+                cartBtn: 'w-full uppercase text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-gray-200 font-medium text-lg px-4 py-2 mr-2 shadow inline-flex justify-center rounded-md hover:shadow-md',
+                qtyClass: 'inline-flex items-center p-2 text-lg font-medium text-gray-900 bg-white border border-gray-500 focus:z-10 cursor-auto rounded-md',
+                selectedBtnClass: 'group text-center uppercase text-white bg-green-700 border border-gray-300 focus:outline-none hover:bg-gray-900 hover:text-gray-900 font-normal text-sm p-1 ml-2 cursor-pointer shadow inline-flex justify-between rounded-md hover:shadow-md',
+                stockOutBtn: 'w-full uppercase text-gray-900 bg-red-600 border border-red-600 hover:bg-red-600 hover:text-black font-medium text-lg px-5 py-2.5 mr-2 mb-2  cursor-pointer shadow inline-flex justify-center',
+
+                selectedModel_id: null,
+                cartActive: false,
             }
         },
 
@@ -332,10 +347,11 @@
             cartflash,
             featureModal,
             descriptionModal,
+            // editDescriptionModal,
             editProductModal,
             authModal,
-            Swiper,
-            SwiperSlide,
+            productCarousel,
+            modelModal
         },
 
         beforeMount() {
@@ -344,39 +360,15 @@
             this.getProduct();
         },
 
-        setup() {
-            const onSwiper = (swiper) => {
-                console.log(swiper);
-            };
-            const onSlideChange = () => {
-                console.log('slide change');
-            };
-
-            return {
-                modules: [
-                    EffectFade, 
-                    Navigation, 
-                    Pagination, 
-                    Controller,
-                    Autoplay
-                ],
-            };
-        },
-
-        created() {
-        },
-
         methods: {
             loaded() {
                 this.isloading = false;
-                this.scrollTo();
+                // this.scrollTo();
             },
 
             scrollTo() {
-                // console.log('pkaaaaaaaaaaaaaaaaaaaaaaah');
                 window.scrollTo(0, 1);
                 window.scrollTo(0, 0);
-                // document.getElementById("app").scrollIntoView();
             },
 
             async copyUrl() {
@@ -384,10 +376,10 @@
                 try {
                     await navigator.clipboard.writeText(mytext);
                     this.flashMessage = 'Copied!';
-                    this.$refs.childComponentRef.flash([this.flashMessage,'bg-green-100']);
+                    this.flashShow(this.flashMessage,'success');
                 } catch($e) {
                     this.flashMessage = 'Cannot copy!';
-                    this.$refs.childComponentRef.flash([this.flashMessage,'bg-red-100']);
+                    this.flashShow(this.flashMessage,'danger');
                 }
             },
 
@@ -432,11 +424,53 @@
                             this.catergory  = data[3]
                             this.features   = data[4]
                             this.description= data[5]
+                            this.models     = this.updatedModels(data[6]);
+
+                            if (this.product.stock > 0) {
+                                this.in_stock = true;
+                            } else {
+                                this.in_stock = false;
+                            }
+
+                            if (!this.models) {
+                                this.selectedModel_id = null;
+                                this.cartActive       = true;
+                            }
+                            
                             this.quantity   = '1';
                             this.quantityVal();
                             this.cartCheck(data[0]);
                             this.loaded();
+                            this.scrollTo();
                     });
+            },
+
+            // Add is_selected to each model
+            updatedModels(infos) {
+                return infos.map(model => ({
+                    ...model,
+                    is_selected: model.is_selected || false, // Default to `false` if not set
+                }));
+            },
+
+            selectModel(model) {
+                // Step 1: Deselect all other models
+                this.models.forEach(m => {
+                    if (m.is_selected) m.is_selected = false;
+                });
+
+                // Step 2: Set the passed model as selected
+                model.is_selected = true;
+
+                // Step 3: Update the selectedModel_id variable
+                this.selectedModel_id = model.id;
+
+                // Step 4: Set cartActive based on whether any model is selected
+                this.cartActive = this.models.some(m => m.is_selected);
+
+                // Optional: Force a re-render if necessary
+                this.$forceUpdate(); 
+                this.flashShow(`${model.name} ${this.product.name} Selected!`, 'cart'); 
             },
 
             cartCheck(product) {
@@ -469,7 +503,7 @@
             addQuantity(product){
                 if (this.quantity == product.stock ) {
                     this.flashMessage = 'Maximum No of Stock Reached!';
-                    this.$refs.childComponentRef.flash([this.flashMessage,'bg-red-100 dark:bg-red-900']);
+                    this.flashShow(this.flashMessage,'danger');
                     this.addBtnClass = "cursor-not-allowed";
                 } else {
                     let qty = this.quantity++;
@@ -480,7 +514,7 @@
             minusQuantity(){
                 if (this.quantity == 1 ) {
                     this.flashMessage = 'Sorry, Cant go Below One!';
-                    this.$refs.childComponentRef.flash([this.flashMessage,'bg-red-100 dark:bg-red-900']);
+                    this.flashShow(this.flashMessage,'danger');
                     this.quantityVal();
                 } else {
                     let qty = this.quantity--;
@@ -488,43 +522,74 @@
                 }
             },
 
-            showFeatureModal() {
-                this.openModal = !this.openModal;
-            },
-
-            showDescriptionModal() {
-                this.openDescriptionModal = !this.openDescriptionModal;
-            },
-
-            showAuthModal() {
-                this.openAuthModal = !this.openAuthModal;
-            },
-
             reload() {
                 axios.get('/api/getProduct/'+ this.product.id)
                     .then(
                     	({data}) => {
-                    		this.product        = data[0]
-                            this.features       = data[4]
-                            this.description    = data[5]
+                    		this.product    = data[0]
+                            this.brand      = data[1]
+                            this.images     = data[2]
+                            this.number     = data[2].length;
+                            this.catergory  = data[3]
+                            this.features   = data[4]
+                            this.description= data[5]
+                            this.models     = this.updatedModels(data[6])
+                            
+                            this.quantity   = '1';
+                            this.quantityVal();
+                            this.cartCheck(data[0]);
+                            this.loaded();
+
+                            if (!this.models) {
+                                this.selectedModel_id = null;
+                                this.cartActive       = true;
+                            }
+
+                            if (this.selectedModel_id) {
+                                this.reselectModel(this.selectedModel_id)
+                            }
                     });
             },
 
+            reselectModel(id) {
+                this.models.forEach(m => {
+                    if (m.is_selected) m.is_selected = false;
+                });
+
+                const model = this.models.find(m => m.id === id);
+                if (model) {
+                    model.is_selected = true; // Set the flag to true to trigger the exit animation
+
+                    // Step 3: Update the selectedModel_id variable
+                    this.selectedModel_id = model.id;
+
+                    // Step 4: Set cartActive based on whether any model is selected
+                    this.cartActive = this.models.some(m => m.is_selected);
+                }
+
+                // Optional: Force a re-render if necessary
+                this.$forceUpdate();
+            },
+
         	addToCart(product) {
-                if (this.dup_count >= 1) {
-                    let message = 'This item is already in your cart!';
-                    this.$refs.childComponentRef.flash([message, 'bg-green-100 dark:bg-green-900',]);
+                if (!this.selectedModel_id) {
+                    this.flashShow('Select a product option', 'cart');
                 } else {
-                    this.fields.product_quantity = this.quantity;
-                    axios.post('/cart/add/'+product.id, this.fields)
-                        .then(response => {
-                            let data = response.data;
-                            this.in_cart = true;
-                            this.$emit('cartinfo', this.user);
-                            this.getProduct();
-                            let message = product.name + ' : added to cart!';
-                            this.$refs.cartflashComponent.flash([message, product, 'bg-green-100 dark:bg-green-900',]);
-                        })
+                    if (this.dup_count >= 1) {
+                        let message = 'This item is already in your cart!';
+                        this.flashShow(message, 'success');
+                    } else {
+                        this.fields.product_quantity = this.quantity;
+                        axios.post('/cart/add/'+product.id, this.fields)
+                            .then(response => {
+                                let data = response.data;
+                                this.in_cart = true;
+                                this.$emit('cartinfo', this.user);
+                                this.getProduct();
+                                let message = product.name + ' : added to cart!';
+                                this.$refs.cartflashComponent.flash([message, product, 'bg-green-100 dark:bg-green-900']);
+                            })
+                    }
                 }
         	},
 
@@ -536,7 +601,7 @@
                 		this.$emit('cartinfo', this.user);
                         this.getProduct();
                         let message = 'Item removed from cart!';
-                        this.$refs.childComponentRef.flash([message, 'bg-red-100 dark:bg-red-900']);
+                        this.flashShow(message, 'danger');
                 	})
             },
 
@@ -548,7 +613,7 @@
 	                axios.delete('/feature/delete/'+feature.id)
 	                    .then(response => {
 	                    	this.flashMessage = 'The feature: ' + name + ' has been deleted!';
-	                    	this.$refs.childComponentRef.flash([this.flashMessage, 'bg-red-100 dark:bg-red-900']);
+	                    	this.flashShow(this.flashMessage, 'danger');
                             this.reload();
 	                 	});
 			   }
@@ -562,10 +627,54 @@
 	                axios.delete('/description/delete/'+description.id)
 	                    .then(response => {
 	                    	this.flashMessage = 'The description: ' + name + ' has been deleted!';
-	                    	this.$refs.childComponentRef.flash([this.flashMessage, 'bg-red-100 dark:bg-red-900']);
+	                    	this.flashShow(this.flashMessage, 'danger');
                             this.reload();
 	                 	});
 			   }
+            },
+
+            // delete model
+            deleteModel(model) {
+                if(confirm('ARE YOU SURE YOU WANT TO DELETE: ' + model.name + '?'))
+			   	{
+                    if (this.selectedModel_id == model.id) {
+                        this.selectedModel_id = null;
+                        this.cartActive       = false;
+                    }
+
+			   		let name = model.name;
+	                axios.delete('/model/delete/'+model.id)
+	                    .then(response => {
+	                    	this.flashShow(`The Product Option: ${name} has been deleted!`, 'danger');
+                            this.reload();
+	                 	});
+			   }
+            },
+
+            // modals 
+            showFeatureModal() {
+                this.openModal = !this.openModal;
+            },
+
+            showDescriptionModal() {
+                this.openDescriptionModal = !this.openDescriptionModal;
+            },
+
+            showModelModal() {
+                this.openModelModal = !this.openModelModal;
+            },
+
+            editDesc(desc) {
+                this.openEditDescriptionModal = !this.openEditDescriptionModal;
+                this.$refs.editDescriptionRef.open(desc);
+            },
+
+            showEditDescriptionModal() {
+                this.openEditDescriptionModal = !this.openEditDescriptionModal;
+            },
+
+            showAuthModal() {
+                this.openAuthModal = !this.openAuthModal;
             },
 
             editProduct() {
@@ -588,7 +697,7 @@
 	                axios.delete('/image/delete/'+image.id)
 	                    .then(response => {
 	                    	this.flashMessage = 'The image has been deleted!';
-	                    	this.$refs.childComponentRef.flash([this.flashMessage, 'bg-red-100 dark:bg-red-900']);
+	                    	this.flashShow(this.flashMessage, 'danger');
                             this.getImages();
 	                 	});
 			   }
@@ -600,15 +709,28 @@
 	                axios.delete('/product/delete/'+product.id)
 	                    .then(response => {
 	                    	this.flashMessage = 'The product has been deleted!';
-	                    	this.$refs.childComponentRef.flash([this.flashMessage, 'bg-red-100 dark:bg-red-900']);
+	                    	this.flashShow(this.flashMessage, 'danger');
                             this.$router.push('/');
 	                 	});
 			   }
             },
 
-            editSwiper() {
-                console.log('pkaaaaaaaaaah');
-            }
+            // flash 
+            flashShow(message, body) {
+                this.$emit('flash', message, body);
+            },
+
+            flashTimed(message, body, duration) {
+                this.$emit('timed', message, body, duration);
+            },
+
+            flashHide(duration) {
+                this.$emit('hide', duration);
+            },
+
+            flashClickShow(message, body, header, url, button, duration) {
+                this.$emit('click', message, body, header, url, button, duration);
+            },
         }
     }
 </script>

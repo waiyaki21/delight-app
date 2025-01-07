@@ -33,6 +33,11 @@ class Catergory extends Model
         return $this->hasMany(Product::class, 'catergory_id');
     }
 
+    public function models()
+    {
+        return $this->hasMany(ProductModel::class, 'catergory_id');
+    }
+
     public function inStockProducts()
     {
         return $this->hasMany(Product::class, 'catergory_id')->orderBy('created_at', 'desc')->where('sold_out', '0');

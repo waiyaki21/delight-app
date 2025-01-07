@@ -87,6 +87,16 @@
                                 <p id="helper-text-explanation" v-if="errors && errors.stock" :class="[formInfo.infoText]"><b>{{ errors.stock[0] }}</b></p>
                                 <p id="helper-text-explanation" v-show="formsuccess" :class="[formInfo.infoText, 'text-success']"><b>Success</b></p>
                             </div>
+
+                            <!-- product info  -->
+                            <div class="col-md-12 mt-2">
+                                <label for="info" v-if="errors && errors.info" :class="[formInfo.labelErrorclass]">Product info <i :class="[formInfo.iconreloadclass]"></i></label>
+                                <label for="info" v-else :class="[formInfo.labelclass]">Product info <i v-if="formsuccess" :class="[formInfo.iconreloadclass]"></i></label>
+                                <input type="text" id="info" name="info" v-model="fields.info" :class="[formInfo.inputclass]" :placeholder="product.info" required>
+                                <p id="helper-text-explanation" v-if="errors && errors.info" :class="[formInfo.infoText]"><b>{{ errors.info[0] }}</b></p>
+                                <p id="helper-text-explanation" v-show="formsuccess" :class="[formInfo.infoText, 'text-success']"><b>Success</b></p>
+                            </div>
+
                             <!-- buttons -->
                             <div class="col-md-12 mt-2">
                                 <button type="submit" :class="[formInfo.bluebtnClass]" @click="submitProduct">
@@ -406,6 +416,7 @@
                 this.fields.brand_id            = this.product.brand_id     ;
                 this.fields.name                = this.product.name         ;
                 this.fields.stock               = this.product.stock        ;
+                this.fields.info               = this.product.info        ;
                 this.fields.price               = this.product.price        ;
                 this.fieldsThumb.thumbnail      = "";
                 this.filesSelected              = 0;

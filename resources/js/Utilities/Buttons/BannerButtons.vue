@@ -3,11 +3,10 @@
         <a class="inline-flex items-center justify-between w-full p-1 text-base uppercase cursor-pointer" :class="[
             baseColor,
             `hover:${hoverColor} dark:hover:${darkHoverColor} dark:${darkColor}`,
-        ]" :data-tooltip-target="this.fullName(id)" @click="onClick">
+        ]" v-tooltip="$tooltip(this.fullName(id), 'top')" @click="onClick">
             <component :is="icon.name" class="md:h-5 md:w-5 h-4 w-4">
             </component>
         </a>
-        <tooltip :id="this.fullName(id)" :info="tooltip"></tooltip>
     </div>
 </template>
 

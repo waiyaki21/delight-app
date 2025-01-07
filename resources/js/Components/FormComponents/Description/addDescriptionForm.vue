@@ -1,7 +1,12 @@
 <template>
   <div class="editor border border-gray-200 p-2" v-if="editor">
     <menu-bar class="editor__header" :editor="editor" />
-    <editor-content rows="4" class="editor__content editor h-40 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" style="height: 150px;" :editor="editor" v-model="this.description" @keydown="sendDescription(editor)"/>
+    <div class="control-group">
+      <div class="button-group">
+        <button @click="addImage">Add image from URL</button>
+      </div>
+    </div>
+    <editor-content rows="4" class="editor__content editor h-40 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" style="height: 150px;" :editor="editor" v-model="this.description"/>
   </div>
 </template>
 
@@ -9,6 +14,11 @@
 import StarterKit from '@tiptap/starter-kit'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import Underline from '@tiptap/extension-underline'
+import Document from '@tiptap/extension-document'
+import Dropcursor from '@tiptap/extension-dropcursor'
+import Image from '@tiptap/extension-image'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
 
 import MenuBar from '../../EditorComponents/MenuBar.vue'
 
@@ -31,17 +41,35 @@ export default {
         StarterKit.configure({
           history: false,
         }),
-        Underline
+        Underline,
+        Document,
+        Paragraph,
+        Text,
+        Image,
+        Dropcursor,
       ],
-      
+      content: '',
+      onUpdate: ({ editor }) => {
+        // Listen for editor updates and update the description
+        this.description = editor.getHTML();
+        this.sendDescription();
+      },
     })
   },
 
   methods: {
+    addImage() {
+      const url = window.prompt('URL')
+
+      if (url) {
+        this.editor.chain().focus().setImage({ src: url }).run()
+      }
+    },
+
     sendDescription() {
       let descriptionInfo = this.editor.getHTML();
       this.description = this.editor.getHTML();
-      // console.log(descriptionInfo);
+      console.log(descriptionInfo);
       this.$emit('descInfo', descriptionInfo);
     },
 
@@ -63,7 +91,7 @@ export default {
 .editor {
   display: flex;
   flex-direction: column;
-  min-height: 250px;
+  min-height: 150px;
   background-color: #FFF;
 
   &__header {

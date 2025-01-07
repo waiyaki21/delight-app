@@ -34,25 +34,58 @@ class ProductDescriptionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request, Product $product)
+    // {
+    //     // validate the request data
+    //     $request->validate([
+    //         'header' => 'required',
+    //         'body' => 'required',
+    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Add image validation here
+    //     ]);
+
+    //     // Handle image upload if present
+    //     if ($request->hasFile('image')) {
+    //         $imagePath = $request->file('image')->store('product_images', 'public'); // Store image in 'product_images' folder in public storage
+    //     } else {
+    //         $imagePath = null; // No image uploaded
+    //     }
+
+    //     // Create the product description record
+    //     ProductDescription::create([
+    //         'product_id' => $product->id,
+    //         'header' => $request->header,
+    //         'body' => $request->body,
+    //         'image_path' => $imagePath, // Save the image path in the database
+    //     ]);
+
+    //     // Get the product record
+    //     $product = Product::orderBy('created_at', 'desc')->first();
+
+    //     return response()->json([
+    //         'product_id' => $product->id,
+    //         'image_url' => asset('storage/' . $imagePath), // Send the image URL to the frontend
+    //     ], 200);
+    // }
+
     public function store(Request $request, Product $product)
     {
         // validate the request data
         request()->validate(
             [
-                'header'         => 'required',
-                'body'         => 'required',
+                'header'                => 'required',
+                'body'                  => 'required',
             ],
             [
-                'header.required'     => 'Description header is required',
-                'body.required'     => 'Description Body is required',
+                'header.required'       => 'Description header is required',
+                'body.required'         => 'Description Body is required',
             ]
         );
 
         // create the record
         ProductDescription::create([
-                'product_id'       => $product->id,
-                'header'             => $request->header,
-                'body'             => $request->body,
+            'product_id'       => $product->id,
+            'header'             => $request->header,
+            'body'             => $request->body,
         ]);
 
         // get the product record

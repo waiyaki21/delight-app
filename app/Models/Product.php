@@ -29,6 +29,7 @@ class Product extends Model
         'in_cart',
         'thumbnail_name',
         'thumbnail_path',
+        'info'
     ];
 
     // protected $appends = [
@@ -85,5 +86,10 @@ class Product extends Model
 
         // If a user is logged in, check if the product is favorited by them
         return $this->favorites()->where('user_id', $user->id)->exists();
+    }
+
+    public function models()
+    {
+        return $this->hasMany(ProductModel::class, 'product_id');
     }
 }

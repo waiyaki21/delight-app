@@ -1,7 +1,7 @@
 <template>
     <figcaption class="absolute px-4 bottom-2 inline-flex justify-between w-full gap-2">
         <ActionButton :buttonClass="'purple'" :buttonText="`${banner.catergory.name}`"
-            class="rounded-md hover:shadow-md w-fit text-lg" @handleClick="this.linkClick(`/catergory/${banner.catergory_id}`)" :id="`${banner.catergory.name}-tooltip`"  :tooltipText="`View ${banner.catergory.name}`">
+            class="rounded-md hover:shadow-md w-fit text-lg" @handleClick="this.linkClick(`/catergory/${banner.catergory_id}`)" v-tooltip="$tooltip(`View ${banner.catergory.name}`, 'top')">
             <right-icon class="mx-2 w-4 h-4 md:w-5 md:h-5"></right-icon>
         </ActionButton>
         <div

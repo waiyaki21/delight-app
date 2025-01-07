@@ -1,8 +1,5 @@
 <template>
     <div class="dark:border-gray-700 dark:bg-gray-700">
-        <flash 
-            ref="childComponentRef"
-        ></flash>
         <div class="p-2 bg-white dark:bg-gray-700">
             <form @submit.prevent="submit">
                 <div class="row">
@@ -23,6 +20,7 @@
                         <div class="col-md-12">
                             <label for="body" v-if="errorsDescription && errorsDescription.body" :class="[formInfo.labelErrorclass]">Enter Description body <i :class="[formInfo.iconreloadclass]"></i></label>
                             <label for="body" v-else :class="[formInfo.labelclass]">Enter Description body <i v-if="formsuccess" :class="[formInfo.iconreloadclass]"></i></label>
+                            <!-- <test></test> -->
                             <addDescription
                                 @descInfo   = "setOrderDescription"
                                 @descget    = "getOrderDescription"
@@ -49,11 +47,10 @@
 </template>
 
 <script>
-    import flash            from '../../AlertComponents/flash-simple.vue';
     // export test 
     import utilities        from '../utilities.js';
 
-    import addDescription from './addDescriptionForm.vue'
+    import addDescription   from './addDescriptionForm.vue';
 
 	export default{
 		props:[
@@ -62,8 +59,8 @@
 		],
 
         components: {
-            flash,
-            addDescription
+            addDescription,
+            // test
         },
 
 		data() {
@@ -115,6 +112,11 @@
                 console.log('order desc success!');
             },
 
+            // Handle the image URL uploaded
+            handleImageUploadFromChild(imageUrl) {
+                this.fieldsDescription.imageUrl = imageUrl; // Store the image URL in the description fields
+            },
+
             // submit product Description
             submitDescription() {
                 // submit the fields first
@@ -125,7 +127,7 @@
                         this.$emit('update')
                         this.fieldsDescription = {};
                         let message = 'Description added Successfully!';
-                        this.$refs.childComponentRef.flash([message, 'bg-green-100 dark:bg-green-900']);
+                        this.flashShow(message, 'success');
                         this.formInfo = utilities.success(this);
                         this.formFields();
                         setTimeout(this.reload, 10000);
@@ -136,7 +138,7 @@
                         this.formInfo = utilities.failed(this);
                         this.errorsDescription = error.response.data.errors || {};
                         let message = 'Please fill in all the inputs!';
-                        this.$refs.childComponentRef.flash([message, 'bg-red-100 dark:bg-red-900']);
+                        this.flashShow(message, 'danger');
                     }
                 });
             }, 
@@ -150,6 +152,10 @@
 
             reload() {
                 this.formInfo = utilities.loaded(this);
+            },
+
+            flashShow(message, body) {
+                this.$emit('flash', message, body);
             }
 		}
 	}
