@@ -14,7 +14,7 @@
                 @timed                = "flashTimed"
                 @hide                 = "flashHide"
                 @click                = "flashClickShow"
-                @reload               = "reloaduser"
+                @reload               = "reloadMain"
                 @reloadproduct        = "getProducts"
                 @userinfo             = "setUser"
             ></main-nav>
@@ -32,7 +32,7 @@
                     :admin              = "admin"
                     @alert              = "reloadflashShow"
                     @cartinfo           = "updateCart"
-                    @reloaduser         = "reloaduser"
+                    @reloaduser         = "reloadMain"
                     @loaded             = "loaded"  
                     @edit               = "editCatergory" 
                     @banner             = "editCatergoryBanner"  
@@ -60,11 +60,6 @@
                 @hide                   = "flashHide"
             ></main-plugin>
             <!-- end plugins -->
-
-            <!-- footer -->
-            <!-- <footer-body
-            ></footer-body> -->
-            <!-- end footer -->
         </div>
     </div>
 </template>
@@ -145,9 +140,13 @@
                 this.$refs.mainNavRef.showProduct();
             },
 
-            reloaduser() {
+            reloadMain() {
                 this.$refs.mainNavRef.getUser();
-                this.componentKey += 1;
+                // this.componentKey += 1;
+            },
+
+            showCart() {
+                this.$refs.mainNavRef.showCartDrawer();
             },
 
             editCatergory(catergory) {
@@ -165,7 +164,7 @@
             reloadflashShow(message, body) {
                 this.flashShow(message, body);
                 // console.log('main-flash-pkaaaaaah', message, body);
-                // this.reloaduser();
+                // this.reloadMain();
             },
 
             // Method to handle the flash message

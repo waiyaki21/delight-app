@@ -12,11 +12,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -26,21 +21,11 @@ class User extends Authenticatable
         'google_id'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -66,5 +51,19 @@ class User extends Authenticatable
             ['in_transit', 0],
             ['bought', 0],
         ]);
+    }
+
+    public function transitCartItems()
+    {
+        return $this->hasMany(CartItem::class, 'buyer_id')->where([
+            ['in_cart', 1],
+            ['in_transit', 1],
+            ['bought', 0],
+        ]);
+    }
+
+    public function allCartItems()
+    {
+        return $this->hasMany(CartItem::class, 'buyer_id');
     }
 }

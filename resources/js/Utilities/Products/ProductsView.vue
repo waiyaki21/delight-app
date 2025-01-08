@@ -6,7 +6,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2" v-if="showList">
                 <div class="group col-span-1 w-full mx-auto my-2 bg-white overflow-hidden border border-gray-200 rounded-lg shadow hover:shadow-md"
                     v-for="product in products">
-                    <div class="grid grid-cols-4 gap-2">
+                    <div class="grid grid-cols-4 gap-2" v-if="!isLoading">
                         <div class="col-span-2 md:shrink-0">
                             <a :href="'/product_show/' + product.id">
                                 <img class="" :src="product.thumbnail_path" :alt="'Delight Electronics ' + product.name"
@@ -47,13 +47,14 @@
                             </div>
                         </div>
                     </div>
+                    <loading-row v-else></loading-row>
                 </div>
             </div>
 
             <!-- cards  -->
             <div :class="[gridClass]" v-else>
-                <div class="group m-1 bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 item-card rounded-lg shadow hover:shadow-xl"
-                    v-for="product in products">
+                <div class="group m-1 bg-white border border-gray-200 item-card rounded-lg shadow hover:shadow-xl"
+                    v-for="product in products" v-if="!isLoading">
                     <a :href="'/product_show/' + product.id" class="flex justify-center">
                         <img class="rounded-t-lg" :src="product.thumbnail_path"
                             :alt="'Delight Electronics ' + product.name" style="height: 200px; width: 100% !important;"
@@ -61,7 +62,7 @@
                         <img class="rounded-t-lg" :src="product.thumbnail_path"
                             :alt="'Delight Electronics ' + product.name" v-else />
                     </a>
-                    <hr class="width-hr mx-auto mb-1 border-b border-blueGray-200" />
+                    <hr-line></hr-line>
                     <div class="p-2">
                         <a :href="'/product_show/' + product.id">
                             <h5 class="font-normal hover:text-gray-700 text-black dark:text-white uppercase">
@@ -93,11 +94,12 @@
                         </div>
                     </div>
                 </div>
+                <loading-card v-for="product in products" v-else></loading-card>
             </div>
         </div>
     </div>
 </template>
-
+ 
 <script>
     export default {
         props: {
@@ -105,7 +107,8 @@
             showBtn: Boolean,
             products: Object,
             gridClass: String,
-            logged: Boolean
+            logged: Boolean,
+            isLoading: Boolean
         },
 
         data() {

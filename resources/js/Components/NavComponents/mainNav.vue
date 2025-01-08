@@ -8,7 +8,7 @@
                     {{ appname }}. 
                 </span>
             </a>
-
+ 
             <!-- ALL ICONS LIST  -->
             <div class="md:flex md:items-center inline-flex items-center md:order-2 xs-max:w-full justify-end xs-max:space-x-2">
                 <!-- menu bar -->
@@ -18,14 +18,14 @@
                 </button>
                 <div class="divider px-1 text-black"></div>
 
-                <!-- shopping cart -->
+                <!-- login -->
                 <a href="/login" type="button" class="relative items-center text-center text-black dark:text-gray-400 rounded-lg text-sm py-1 pr-1 mr-1 xs-hidden" v-if="!logged">
                     <shopping-icon :class="this.iconClass"></shopping-icon>
                     <div :class="this.badgeClass">
                         0
                     </div>
                 </a>
-                <!-- end shopping cart -->
+                <!-- end login -->
 
                 <!-- favorites items -->
                 <router-link :to="'/favorites/'+user.id" type="button" :class="this.linkClass" v-if="logged">
@@ -34,16 +34,17 @@
                         {{ this.favorites }}
                     </div>
                 </router-link>
-                <div class="divider px-1 text-black"></div>
+                <div class="divider px-1 text-black" v-if="logged"></div>
                 <!-- end favorites items-->
 
                 <!-- cart items -->
-                <router-link :to="'/checkout/'+user.id" type="button" :class="this.linkClass" v-if="logged">
+                <!-- menu bar -->
+                <button type="button" :class="this.linkClass" v-if="logged" @click="showCartDrawer">
                     <shopping-icon :class="this.iconClass"></shopping-icon>
                     <div :class="this.badgeClass">
-                        {{ this.cartItems }}
+                        {{ this.cartNo }}
                     </div>
-                </router-link>
+                </button>
                 <div class="divider px-1 text-black"></div>
                 <!-- end cart items-->
 
@@ -77,7 +78,7 @@
                                         </p>
                                     </div>
                                 </div> 
-                                <hr class="width-hr mx-auto mb-1 border-b border-gray-500" />
+                                <hr-line></hr-line>
                             </a>
                             <a class="ease-soft py-1.2 clear-both block w-full whitespace-nowrap bg-white text-black px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" :href="'/notification/'+notification.id" v-else>
                                 <div class="flex py-1 px-1">
@@ -91,7 +92,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <hr class="width-hr mx-auto mb-1 border-b border-gray-500" />
+                                <hr-line></hr-line>
                             </a>
                         </li>
                         <div class="px-4 py-3">
@@ -195,7 +196,7 @@
         :catergories     = "this.catergories"
         :logged          = "this.logged"
         :user            = "this.user"
-        :cartitems       = "this.cartItems"
+        :cartitems       = "this.cartNo"
         @search          = "this.showSearch"
         @show            = "this.showModal"
         @showedit        = "this.showEditModal"
@@ -205,6 +206,21 @@
         @deletecatergory = "this.deleteCatergory"
     ></sidebar>
     <!-- end sidebar  -->
+
+    <!-- cart nav -->
+    <cartSide
+        ref 			 = "cartSideRef" 
+        @mouseleave      = this.closeCartDrawer
+        :cartitems       = this.cartItems
+        :user            = this.user
+        @close           = this.closeCartDrawer
+        @reload          = this.reloadCart
+        @flash           = "flashShow"
+        @hide            = "flashHide"
+        @timed           = "flashTimed"
+        @click           = "flashClickShow"
+    ></cartSide>
+    <!-- end cart nav -->
 
     <!-- navigation modals -->
     <!-- add catergory modal  -->
@@ -272,6 +288,7 @@
     import catMobile                from './partials/catergories-mobile.vue';
     import catFull                  from './partials/catergories-full.vue';
     import sidebar                  from './partials/nav-sidebar.vue';
+    import cartSide                 from './partials/cart-sidebar.vue';
     import moment                   from 'moment';
 
     export default {
@@ -291,7 +308,8 @@
             searchModal,
             catMobile,
             catFull,
-            sidebar
+            sidebar,
+            cartSide
         },
 
         data() {
@@ -307,6 +325,8 @@
                 cartItems: '',
                 favorites: '',
                 fields: {},
+
+                showCart: false,
 
                 //show form
                 showSearchForm: true,
@@ -334,7 +354,8 @@
                 isScrollingDown: false,
                 navbarOpacity: 1,
                 isHovered: false,
-                previousOpacity: 1
+                previousOpacity: 1,
+                cartNo: ''
             }
         },
 
@@ -403,6 +424,7 @@
                                 this.admin      = data[2]
                                 this.favorites  = data[3];
                                 this.cartItems  = data[4];
+                                this.cartNo     = data[4].length;
                                 this.getNotifications();
                             } else {
                                 this.user = [
@@ -412,9 +434,15 @@
                                 this.favorites      = 0;
                                 this.cartItems      = 0;
                                 this.notifications  = 0;
+                                this.cartNo         = 0;
                             }
                             this.$emit('userinfo', [this.logged, this.user, this.admin]);
                     });
+            },
+
+            getCartItems() {
+                this.getUser();
+                this.showCartDrawer();
             },
 
             showUser() {
@@ -435,16 +463,14 @@
                 }
             },
 
-            getCartItems(user) {
-                if (this.logged = true) {
-                    // console.log('maneno sawa');
-                    axios.get('/api/getCartNav/'+ user.id)
-                        .then(
-                            ({data}) => {
-                                this.cartItems = data;
-                                this.getNotifications();
-                        });
-                }
+            showCartDrawer() {
+                this.$refs.cartSideRef.showDrawer(this.user.id);
+            },
+
+            closeCartDrawer() {
+                setTimeout(() => {
+                    this.$refs.cartSideRef.closeDrawer();
+                }, 1500);
             },
 
             fromDate(date) {
@@ -545,6 +571,12 @@
             reload() {
 				this.$emit('reloadproduct');
                 this.getCatergories();
+			},
+
+            reloadCart() {
+				this.$emit('reload');
+                // this.getUser();
+                // this.getCatergories();
 			},
             
             async deleteCatergory(category) {

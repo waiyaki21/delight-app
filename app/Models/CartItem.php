@@ -15,6 +15,8 @@ class CartItem extends Model
         'seller_id',
         'product_id',
         'shipping_id',
+        'model_id',
+        'model_name',
         'thumbnail_path',
         'product_name',
         'product_price',
@@ -33,15 +35,19 @@ class CartItem extends Model
     }
 
     public function product() {
-        return $this->belongsTo('App\Models\Product', 'product_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function seller() {
-        return $this->belongsTo('App\Models\Admin', 'seller_id');
+        return $this->belongsTo(Admin::class, 'seller_id');
     }
 
     public function thumbnail() {
         return $this->hasOne(ProductThumbnail::class, 'id');
+    }
+
+    public function model() {
+        return $this->hasOne(ProductModel::class, 'model_id');
     }
 
     public function shipping() {

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\CartItem;
+use App\Models\ProductModel;
 use App\Models\Shipping;
 
 use Illuminate\Http\Request;
@@ -50,9 +51,10 @@ class CartItemController extends Controller
     public function cartAdd(Request $request, Product $product)
     {
         // validate the request data
-        request()->validate(
-            ['product_quantity'   => 'required',]
-        );
+        request()->validate([
+            'product_quantity'   => 'required',
+            'model_id'           => 'required'
+        ]);
 
         $now = Carbon::now();
 
@@ -64,11 +66,16 @@ class CartItemController extends Controller
 
         $total = $request->product_quantity * $product->price;
 
+        $model = ProductModel::where('id', $request->model_id)->first();
+        // return $model;
+
         CartItem::create([
             'buyer_id'          => $buyer_id,
             'seller_id'         => $product->admin_id,
             'product_id'        => $product->id,
             'product_name'      => $product->name,
+            'model_id'          => $model->id,
+            'model_name'        => $model->name,
             'product_price'     => $product->price,
             'product_quantity'  => $request->product_quantity,
             'product_stock'     => $product->stock,
@@ -110,26 +117,6 @@ class CartItemController extends Controller
         return response()->json([null, 200]);
     }
 
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(CartItem $cartItem)
-    {
-        //
-    }
-
-    public function edit(CartItem $cartItem)
-    {
-        //
-    }
-
     public function update(Request $request, CartItem $cartItem)
     {
         $item = CartItem::where('id', $cartItem->id)
@@ -143,7 +130,32 @@ class CartItemController extends Controller
             'product_total'     => $total,
         ]);
 
-        return response()->json([null, 200]);
+        $user = Auth::user();
+
+        $items = CartItem::where([
+            ['buyer_id', $user->id],
+            ['in_cart', 1],
+            ['in_transit', 0],
+            ['bought', 0],
+        ])
+            ->with('product:id,name,stock')
+            ->get();
+
+        $total = CartItem::where([
+            ['buyer_id', $user->id],
+            ['in_cart', 1],
+            ['bought', 0],
+        ])
+            ->sum('product_total');
+
+        $total_no = CartItem::where([
+            ['buyer_id', $user->id],
+            ['in_cart', 1],
+            ['bought', 0],
+        ])
+            ->sum('product_quantity');
+
+        return [$items, $total, $total_no];
     }
 
     public function destroy(CartItem $cartItem)
@@ -175,22 +187,6 @@ class CartItemController extends Controller
                             ['bought', 0],
                         ])
                         ->with('product:id,name,stock')
-                        ->get();
-
-        $transit_items = CartItem::where([
-                            ['buyer_id', $user->id],
-                            ['in_cart', 0],
-                            ['in_transit', 1],
-                            ['bought', 0],
-                        ])
-                        ->get();
-
-        $bought_items = CartItem::where([
-                            ['buyer_id', $user->id],
-                            ['in_cart', 0],
-                            ['in_transit', 0],
-                            ['bought', 1],
-                        ])
                         ->get();
 
         $total = CartItem::where([

@@ -1,7 +1,7 @@
 <template>
     <div>
         <loading-body v-if="isloading == true"></loading-body>
-        <div class="mx-auto bg-gray-50 dark:bg-gray-900 max-h-full mt-24 pt-2 w-[90%]" v-else>
+        <div class="mx-auto bg-gray-100 dark:bg-gray-900 max-h-full mt-24 pt-2 w-[90%]" v-else>
             <h2 class="text-black uppercase text-4xl mt-4 mb-1 flex justify-between border-b border-gray-600 w-full">
                 {{ info }}.
                 <div class="flex">
@@ -16,7 +16,7 @@
             </h2>
             <!-- products grid/card view  -->
             <no-products v-if="!products" :user="user"></no-products>
-            <productsView :products="products" :show-list="this.showList" :show-btn="this.showBtn" :grid-class="this.gridClass" :logged="logged" @favorites="reloadWithMessage" v-else/>
+            <productsView :products="products" :show-list="this.showList" :show-btn="this.showBtn" :grid-class="this.gridClass" :logged="logged" @favorites="reloadWithMessage" :is-loading="this.isLoading" v-else/>
         </div>
     </div>
 
@@ -51,6 +51,9 @@ export default {
             btnClass,
             showList,
             showBtn,
+            toggleBtn,
+            orderList,
+            orderCard,
             fetchProducts,
             updatedProducts,
             reloadProducts,
@@ -87,7 +90,10 @@ export default {
             btnClass,
             showList,
             showBtn,
-            reloadWithMessage
+            reloadWithMessage,
+            toggleBtn,
+            orderList,
+            orderCard
         };
     }
 };

@@ -26,7 +26,7 @@ class HomeController extends Controller
         if (Auth::check()) {
             $user       = Auth::user();
             $favorites  = $user->favorites()->count();
-            $items      = $user->cartItems()->count();
+            $items      = $user->cartItems()->get();
             $logged     = true;
             $admin      = Auth::user()->admin;
         } else {

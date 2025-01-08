@@ -11,14 +11,6 @@
 
 <template>
     <div>
-        <flash 
-            ref             ="childComponentRef"
-        ></flash>
-        <cartflash 
-            v-if            = "this.logged == true"
-            v-bind:user     = "user"
-            ref             = "cartflashComponent"
-        ></cartflash>
         <loading-body
             v-if="isloading == true"
         ></loading-body>
@@ -70,7 +62,7 @@
                     <p class="uppercase text-4xl">{{ product.name }}</p>
                     <p class="uppercase text-4xl mt-2 text-gray-500">ksh {{ Number(product.price).toLocaleString() }}.00</p>
                     <p class="text-lg my-1 text-gray-900">{{ product.info }}</p>
-                    <hr class="my-2">
+                    <hr-line></hr-line>
                     <!-- product models  -->
                     <div class="w-full inline-flex mb-2">
                         <span v-for="model in models" :class="[model.is_selected ? selectedBtnClass : actionBtnClass, 'inline-flex justify-center space-x px-2 py-0.5']" @click="selectModel(model)">
@@ -133,7 +125,7 @@
                             <stop-icon class="mx-2 h-6 w-6"></stop-icon>
                         </a>
                     </div>
-                    <hr class="my-2">
+                    <hr-line></hr-line>
                     <!-- add product extra info  -->
                     <p class="uppercase text-xl text-muted mb-2 flex" v-if = "this.admin">
                         <span :class="this.actionBtnClass" @click="showFeatureModal" >
@@ -277,7 +269,6 @@
     import editProductModal       from '../modalComponents/productModals/editProduct-modal.vue';
     import authModal 	          from '../ModalComponents/authModals/auth-modal.vue';
     import flash                  from '../AlertComponents/flash-simple.vue';
-    import cartflash              from '../AlertComponents/flash-cart.vue';
     import productCarousel        from './carousel/productCarousel.vue';
 
     export default {
@@ -344,7 +335,6 @@
 
         components: {
             flash,
-            cartflash,
             featureModal,
             descriptionModal,
             // editDescriptionModal,
@@ -464,6 +454,7 @@
 
                 // Step 3: Update the selectedModel_id variable
                 this.selectedModel_id = model.id;
+                this.fields.model_id  = model.id;
 
                 // Step 4: Set cartActive based on whether any model is selected
                 this.cartActive = this.models.some(m => m.is_selected);
@@ -562,6 +553,7 @@
 
                     // Step 3: Update the selectedModel_id variable
                     this.selectedModel_id = model.id;
+                    this.fields.model_id  = model.id;
 
                     // Step 4: Set cartActive based on whether any model is selected
                     this.cartActive = this.models.some(m => m.is_selected);
@@ -580,14 +572,13 @@
                         this.flashShow(message, 'success');
                     } else {
                         this.fields.product_quantity = this.quantity;
+                        this.fields.model_id         = this.selectedModel_id;
                         axios.post('/cart/add/'+product.id, this.fields)
                             .then(response => {
                                 let data = response.data;
                                 this.in_cart = true;
                                 this.$emit('cartinfo', this.user);
                                 this.getProduct();
-                                let message = product.name + ' : added to cart!';
-                                this.$refs.cartflashComponent.flash([message, product, 'bg-green-100 dark:bg-green-900']);
                             })
                     }
                 }

@@ -10,6 +10,7 @@ export default function useProductView(apiEndpoint) {
     const btnClass = ref('');
     const showList = ref(true);
     const showBtn = ref(false);
+    const toggleBtn = ref('mx-2 h-6 w-6 text-black hover:text-cyan-600 cursor-pointer');
     const windowWidth = ref(0);
 
     const getWindowWidth = () => {
@@ -25,6 +26,16 @@ export default function useProductView(apiEndpoint) {
         }
     };
 
+    const startLoading = () => {
+        isLoading.value = true;
+    };
+    
+    const endLoading = () => {
+        setTimeout(() => {
+            isLoading.value = false;
+        }, 1000);
+    };
+
     const updateLayout = (grid, btn, btnVisible, action) => {
         gridClass.value = grid;
         btnClass.value = btn;
@@ -33,11 +44,15 @@ export default function useProductView(apiEndpoint) {
     };
 
     const orderList = () => {
+        startLoading();
         showList.value = true;
+        endLoading();
     };
 
     const orderCard = () => {
+        startLoading();
         showList.value = false;
+        endLoading();
     };
 
     const fetchProducts = (routeId) => {
@@ -46,7 +61,7 @@ export default function useProductView(apiEndpoint) {
             info.value      = data[0];
             products.value  = data[1];
             getWindowWidth();
-            isLoading.value = false;
+            endLoading();
         });
     };
 
@@ -78,10 +93,12 @@ export default function useProductView(apiEndpoint) {
 
     const reloadProducts = async (message, routeId) => {
         try {
+            isLoading.value = true;
             const response = await axios.get(`${apiEndpoint}/${routeId}`);
             const data = response.data;
             info.value = data[0] || [];
             products.value = data[1] || [];
+            endLoading();
         } catch (error) {
             console.error('Error reloading products:', error);
         }
@@ -95,6 +112,7 @@ export default function useProductView(apiEndpoint) {
         btnClass,
         showList,
         showBtn,
+        toggleBtn,
         getWindowWidth,
         fetchProducts,
         reloadProducts,

@@ -18,7 +18,7 @@
             </h2>
             <!-- products grid/card view  -->
             <productsView :products="products" :show-list="this.showList" :show-btn="this.showBtn"
-                :grid-class="this.gridClass" :logged="logged" @favorites="reloadInfo" />
+                :grid-class="this.gridClass" :logged="logged" @favorites="reloadInfo" :is-loading="this.isLoading"/>
         </div>
     </div>
 

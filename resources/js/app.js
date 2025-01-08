@@ -21,13 +21,10 @@ import mainNav          from './Components/NavComponents/mainNav.vue'
 import mainPlugin       from './Components/PluginComponents/mainPlugin.vue'
 // import contactPlugin    from './components/PluginComponents/contactPlugin.vue'
 
-// Loading Body
-import loadingBody      from './Components/BodyComponents/LoadingBody.vue'
-
 // content 
-import contentBody      from './Components/BodyComponents/Homepage.vue'
+// import contentBody      from './Components/BodyComponents/Homepage.vue'
 // search content 
-import searchBody       from './Components/SearchComponents/viewSearch.vue'
+// import searchBody       from './Components/SearchComponents/viewSearch.vue'
 
 // footer Body
 import footerBody       from './Components/BodyComponents/FooterBody.vue'
@@ -49,6 +46,14 @@ import Tooltip          from './Utilities/Tooltips/tooltip.vue';
 import actionButton     from './Utilities/Buttons/actionButton.vue';
 import styleButton      from './Utilities/Buttons/styleButton.vue';
 import globalMixin      from './Globals/globalMixin';
+
+// loading Utils
+import loading          from './Utilities/Loading/LoadingBody.vue';
+import loadingTable     from './Utilities/Loading/LoadingTable.vue';
+import loadingCard      from './Utilities/Loading/LoadingCard.vue';
+import loadingRow       from './Utilities/Loading/LoadingRow.vue';
+import hrClass          from './Utilities/hrClass.vue';
+
 const app = createApp({})
 app
         .component('main-body',     appBody)
@@ -56,9 +61,9 @@ app
         .component('main-nav',      mainNav)
         .component('main-plugin',   mainPlugin)
         // .component('contact-plugin',contactPlugin)
-        .component('loading-body',  loadingBody)
-        .component('content-body',  contentBody)
-        .component('search-body',   searchBody)
+        // .component('loading-body',  loadingBody)
+        // .component('content-body',  contentBody)
+        // .component('search-body',   searchBody)
         .component('footer-body',   footerBody)
 
         // assistants
@@ -115,6 +120,11 @@ app
         .component('no-products',       NoProducts)
         .component('modal-header',      modalHeader)
         .component('tooltip',           Tooltip)
+        .component('loading-body',      loading)
+        .component('loading-table',     loadingTable)
+        .component('loading-card',      loadingCard)
+        .component('loading-row',       loadingRow)
+        .component('hr-line',           hrClass)
 
         // buttons
         .component('ActionButton',      actionButton)
